@@ -23,7 +23,7 @@ ECH_REPO=https://github.com/echelonfoundation/echelon
 ECH_GENESIS=https://gist.githubusercontent.com/echelonfoundation/ee862f58850fc1b5ee6a6fdccc3130d2/raw/55c2c4ea2fee8a9391d0dc55b2c272adb804054a/genesis.json
 ECH_ADDRBOOK=https://ech.world/latest/addrbook.json
 ECH_DENOM=aechelon
-ECH_PORT=212
+ECH_PORT=61
 
 echo "export ECH_WALLET=${ECH_WALLET}" >> $HOME/.bash_profile
 echo "export ECH=${ECH}" >> $HOME/.bash_profile
