@@ -23,7 +23,7 @@ LMX_REPO=https://github.com/cryptonetD/lumenx.git
 LMX_GENESIS=https://raw.githubusercontent.com/sxlzptprjkt/resource/master/mainnet/lumenx/genesis.json
 LMX_ADDRBOOK=https://raw.githubusercontent.com/sxlzptprjkt/resource/master/mainnet/lumenx/addrbook.json
 LMX_DENOM=ulumen
-LMX_PORT=27
+LMX_PORT=26
 
 echo "export LMX_WALLET=${LMX_WALLET}" >> $HOME/.bash_profile
 echo "export LMX=${LMX}" >> $HOME/.bash_profile
