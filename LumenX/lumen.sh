@@ -23,7 +23,7 @@ LMX_REPO=https://github.com/cryptonetD/lumenx.git
 LMX_GENESIS=https://raw.githubusercontent.com/sxlzptprjkt/resource/master/mainnet/lumenx/genesis.json
 LMX_ADDRBOOK=https://raw.githubusercontent.com/sxlzptprjkt/resource/master/mainnet/lumenx/addrbook.json
 LMX_DENOM=ulumen
-LMX_PORT=26
+LMX_PORT=27
 
 echo "export LMX_WALLET=${LMX_WALLET}" >> $HOME/.bash_profile
 echo "export LMX=${LMX}" >> $HOME/.bash_profile
@@ -69,10 +69,10 @@ go version
 cd $HOME
 rm -rf $LMX
 git clone $LMX_REPO
-cd LMXelon
+cd $LMX_FOLDER
 git checkout $LMX_VER
 make install
-sudo mv ~/go/bin/lumenxd /usr/local/bin/lumenxd
+sudo mv ~/go/bin/$LMX /usr/local/bin/$LMX
 
 # Init generation
 $LMX config chain-id $LMX_ID
@@ -94,9 +94,14 @@ sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.
 sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${LMX_PORT}317\"%; s%^address = \":8080\"%address = \":${LMX_PORT}080\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${LMX_PORT}090\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${LMX_PORT}091\"%" $HOME/$LMX_FOLDER/config/app.toml
 
 # Set Config Pruning
-sed -i -e "s/^pruning *=.*/pruning = \"nothing\"/" $HOME/$LMX_FOLDER/config/app.toml
-indexer="null" && \
-sed -i -e "s/^indexer *=.*/indexer = \"$indexer\"/" $HOME/$LMX_FOLDER/config/config.toml
+pruning="custom"
+pruning_keep_recent="100"
+pruning_keep_every="0"
+pruning_interval="19"
+sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/$LMX_FOLDER/config/app.toml
+sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_recent\"/" $HOME/$LMX_FOLDER/config/app.toml
+sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/$LMX_FOLDER/config/app.toml
+sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/$LMX_FOLDER/config/app.toml
 
 # Set minimum gas price
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025$LMX_DENOM\"/" $HOME/$LMX_FOLDER/config/app.toml
