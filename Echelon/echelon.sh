@@ -101,10 +101,6 @@ sed -i -e "s/^indexer *=.*/indexer = \"$indexer\"/" $HOME/.echelond/config/confi
 # Set minimum gas price
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0001$ECH_DENOM\"/" $HOME/$ECH_FOLDER/config/app.toml
 
-# Enable snapshots
-$ECH tendermint unsafe-reset-all --home $HOME/$ECH_FOLDER --keep-addr-book
-curl -L curl -L https://snapshot.echelon.spt-node.my.id/echelon/echelon-snapshot.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.echelond
-
 # Create Service
 sudo tee /etc/systemd/system/$ECH.service > /dev/null <<EOF
 [Unit]
