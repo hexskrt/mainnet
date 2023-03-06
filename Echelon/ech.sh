@@ -78,7 +78,7 @@ sudo cp ~/go/bin/echelond /usr/local/bin/echelond
 $ECH config chain-id $ECH_ID
 $ECH config keyring-backend test
 $ECH config node tcp://localhost:${ECH_PORT}657
-$ECH init Genesis --chain-id $ECH_ID
+$ECH init $ECH_NODENAME --chain-id $ECH_ID
 
 # Set peers and seeds
 PEERS="7d1b064a6d66b86a87c5a45d1008af533069a471@echond-peer.nodine.id:443"
