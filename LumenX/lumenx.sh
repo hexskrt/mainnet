@@ -71,7 +71,7 @@ rm -rf $LMX
 git clone $LMX_REPO
 cd $LMX_FOLDER
 git checkout $LMX_VER
-make install
+make build
 sudo mv ~/go/bin/$LMX /usr/local/bin/$LMX
 
 # Init generation
