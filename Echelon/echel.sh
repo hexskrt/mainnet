@@ -76,7 +76,7 @@ sudo cp ~/go/bin/echelond /usr/local/bin/echelond
 
 # Init generation
 $ECH config chain-id $ECH_ID
-$ECH config keyring-backend test
+$ECH config keyring-backend file
 $ECH config node tcp://localhost:${ECH_PORT}657
 $ECH init $ECH_NODENAME --chain-id $ECH_ID
 
