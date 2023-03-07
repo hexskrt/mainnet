@@ -76,7 +76,7 @@ sudo mv ~/go/bin/$LMX /usr/local/bin/$LMX
 
 # Init generation
 $LMX config chain-id $LMX_ID
-$LMX config keyring-backend test
+$LMX config keyring-backend file
 $LMX config node tcp://localhost:${LMX_PORT}657
 $LMX init $LMX_NODENAME --chain-id $LMX_ID
 
