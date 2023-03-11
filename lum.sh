@@ -23,7 +23,7 @@ LUM_REPO=https://github.com/lum-network/chain.git
 LUM_GENESIS=https://raw.githubusercontent.com/lum-network/mainnet/master/genesis.json
 LUM_ADDRBOOK=https://anode.team/Lum/main/addrbook.json
 LUM_DENOM=ulumen
-LUM_PORT=27
+LUM_PORT=28
 
 echo "export LUM_WALLET=${LUM_WALLET}" >> $HOME/.bash_profile
 echo "export LUM=${LUM}" >> $HOME/.bash_profile
