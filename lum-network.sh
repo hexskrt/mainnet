@@ -72,7 +72,6 @@ git clone $LUM_REPO lum
 cd lum
 git checkout $LUM_VER
 make install
-sudo mv ~/go/bin/$LUM /usr/local/bin/$LUM
 
 # Init generation
 $LUM config chain-id $LUM_ID
