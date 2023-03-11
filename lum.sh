@@ -19,7 +19,7 @@ LUM=lumd
 LUM_ID=lum-network-1
 LUM_FOLDER=
 LUM_VER=v1.3.1
-LUM_REPO=https://github.com/lum-network/chain.git
+LUM_REPO=https://github.com/lum-network/chain.git lum
 LUM_DENOM=ulum
 LUM_PORT=28
 
@@ -66,7 +66,7 @@ go version
 # Get mainnet version of LUMelon
 cd $HOME
 rm -rf $LUM
-git clone $LUM_REPO lum
+git clone $LUM_REPO
 cd lum
 git checkout $LUM_VER
 make install
