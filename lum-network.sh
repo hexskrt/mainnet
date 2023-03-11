@@ -68,7 +68,7 @@ go version
 # Get mainnet version of LUMelon
 cd $HOME
 rm -rf $LUM
-git clone $LUM_REPO
+git clone $LUM_REPO lum
 cd lum
 git checkout $LUM_VER
 make install
