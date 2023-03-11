@@ -20,8 +20,6 @@ LUM_ID=lum-network-1
 LUM_FOLDER=
 LUM_VER=v1.3.1
 LUM_REPO=https://github.com/lum-network/chain.git
-LUM_GENESIS=https://raw.githubusercontent.com/lum-network/mainnet/master/genesis.json
-LUM_ADDRBOOK=https://anode.team/Lum/main/addrbook.json
 LUM_DENOM=ulum
 LUM_PORT=28
 
@@ -86,8 +84,8 @@ sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$LUM_FOLDER/config/config.to
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$LUM_FOLDER/config/config.toml
 
 # Download genesis and addrbook
-curl -Ls $LUM_GENESIS > $HOME/$LUM_FOLDER/config/genesis.json
-curl -Ls $LUM_ADDRBOOK > $HOME/$LUM_FOLDER/config/addrbook.json
+curl https://anode.team/Lum/main/genesis.json > ~/.lumd/config/genesis.json
+curl https://anode.team/Lum/main/addrbook.json > ~/.lumd/config/addrbook.json
 
 # Set Port
 sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${LUM_PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${LUM_PORT}657\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${LUM_PORT}060\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${LUM_PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${LUM_PORT}660\"%" $HOME/$LUM_FOLDER/config/config.toml
