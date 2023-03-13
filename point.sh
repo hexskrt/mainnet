@@ -69,7 +69,7 @@ go version
 cd $HOME
 rm -rf $POINT
 git clone $POINT_REPO
-cd POINT
+cd point-chain
 git checkout $POINT_VER
 make install
 sudo mv ~/go/bin/$POINT /usr/local/bin/$POINT
