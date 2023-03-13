@@ -23,7 +23,7 @@ POINT_REPO=https://github.com/pointnetwork/point-chain
 POINT_GENESIS=https://raw.githubusercontent.com/pointnetwork/point-chain-config/main/mainnet-1/genesis.json
 POINT_ADDRBOOK=https://anode.team/Point/main/addrbook.json
 POINT_DENOM=apoint
-POINT_PORT=27
+POINT_PORT=28
 
 echo "export POINT_WALLET=${POINT_WALLET}" >> $HOME/.bash_profile
 echo "export POINT=${POINT}" >> $HOME/.bash_profile
