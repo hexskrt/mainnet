@@ -21,7 +21,7 @@ sudo systemctl restart c4ed && journalctl -u c4ed -f -o cat
 ```
 sudo systemctl stop c4ed
 cp $HOME/.c4e-chain/data/priv_validator_state.json $HOME/.c4e-chain/priv_validator_state.json.backup
-c4ed tendermint unsafe-reset-all --home $HOME/.c4e-chain```
+c4ed tendermint unsafe-reset-all --home $HOME/.c4e-chain
 
 STATE_SYNC_RPC=https://rpc.c4e.hexskrt.net:27656
 STATE_SYNC_PEER=a2012f7a7f735cdb80b1536b012f708002fe74de@rpc.c4e.hexskrt.net:27656
