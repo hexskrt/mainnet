@@ -21,7 +21,6 @@ DEC_FOLDER=.decentr
 DEC_VER=v1.6.2
 DEC_REPO=https://github.com/Decentr-net/decentr
 DEC_GENESIS=https://ibs.team/statesync/Decentr/genesis.json
-DEC_ADDRBOOK=https://anode.team/DEC/main/addrbook.json
 DEC_DENOM=udec
 DEC_PORT=29
 
@@ -80,14 +79,9 @@ $DEC config keyring-backend file
 $DEC config node tcp://localhost:${DEC_PORT}657
 $DEC init New_peer --chain-id $DEC_ID
 
-# Set peers and seeds
-PEERS=""
-SEEDS=""
-sed -i.bak -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/$DEC_FOLDER/config/config.toml
-
 # Download genesis and addrbook
+rm -rf $DEC_FOLDER/config/genesis.json
 curl -Ls $DEC_GENESIS > $HOME/$DEC_FOLDER/config/genesis.json
-curl -Ls $DEC_ADDRBOOK > $HOME/$DEC_FOLDER/config/addrbook.json
 
 # Set Port
 sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${DEC_PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${DEC_PORT}657\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${DEC_PORT}060\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${DEC_PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${DEC_PORT}660\"%" $HOME/$DEC_FOLDER/config/config.toml
@@ -112,6 +106,10 @@ sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = \"2\"/" $HOME/$DE
 $DEC tendermint unsafe-reset-all --home $HOME/$DEC_FOLDER
 NODE1_ID=$(curl -s "https://decentr-rpc.ibs.team:443/status" | jq -r .result.node_info.id)
 NODE1_LISTEN_ADD=$(curl -s "https://decentr-rpc.ibs.team:443/status" | jq -r .result.node_info.listen_addr)
+
+LATEST_HEIGHT=$(curl -s "https://decentr-rpc.ibs.team:443/block" | jq -r .result.block.header.height);
+BLOCK_HEIGHT=$((LATEST_HEIGHT - 1000)); \
+TRUST_HASH=$(curl -s "https://decentr-rpc.ibs.team:443/block?height=$BLOCK_HEIGHT" | jq -r .result.block_id.hash)
 
 sed -i.bak -E "s|^(enable[[:space:]]+=[[:space:]]+).*$|\1true| ; \
   s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"https://decentr-rpc.ibs.team:443,https://decentr-rpc.ibs.team:443\"| ; \
