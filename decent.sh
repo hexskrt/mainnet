@@ -78,7 +78,7 @@ sudo mv ~/go/bin/$DEC /usr/local/bin/$DEC
 $DEC config chain-id $DEC_ID
 $DEC config keyring-backend file
 $DEC config node tcp://localhost:${DEC_PORT}657
-$DEC init $DEC_NODENAME --chain-id $DEC_ID
+$DEC init New_peer --chain-id $DEC_ID
 
 # Set peers and seeds
 PEERS=""
