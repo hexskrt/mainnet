@@ -77,7 +77,7 @@ sudo mv ~/go/bin/$DEC /usr/local/bin/$DEC
 $DEC config chain-id $DEC_ID
 $DEC config keyring-backend file
 $DEC config node tcp://localhost:${DEC_PORT}657
-$DEC init New_peer --chain-id $DEC_ID
+$DEC init $DEC_NODENAME --chain-id $DEC_ID
 
 # Download genesis and addrbook
 curl -Ls $DEC_GENESIS > $HOME/$DEC_FOLDER/config/genesis.json
