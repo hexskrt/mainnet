@@ -20,7 +20,7 @@ DEC_ID=mainnet-3
 DEC_FOLDER=.decentr
 DEC_VER=v1.6.2
 DEC_REPO=https://github.com/Decentr-net/decentr
-DEC_GENESIS=https://raw.githubusercontent.com/Decentr-net/mainnets/master/3.0/genesis.json
+DEC_GENESIS=https://ibs.team/statesync/Decentr/genesis.json
 DEC_ADDRBOOK=https://anode.team/DEC/main/addrbook.json
 DEC_DENOM=udec
 DEC_PORT=29
@@ -105,8 +105,8 @@ sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $
 
 # Set minimum gas price
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025$DEC_DENOM\"/" $HOME/$DEC_FOLDER/config/app.toml
-sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$DEC_FOLDER/config/app.toml
-sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = \"5\"/" $HOME/$DEC_FOLDER/config/app.toml
+sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"1000\"/" $HOME/$DEC_FOLDER/config/app.toml
+sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = \"2\"/" $HOME/$DEC_FOLDER/config/app.toml
 
 # Enable Statesync
 $DEC tendermint unsafe-reset-all --home $HOME/$DEC_FOLDER
