@@ -79,6 +79,10 @@ $DEC config keyring-backend file
 $DEC config node tcp://localhost:${DEC_PORT}657
 $DEC init $DEC_NODENAME --chain-id $DEC_ID
 
+# Set Seeds
+SEEDS="97b2d394748c8c2bdd8ea1d16902daa1c8db1292@185.188.249.18:26656"
+sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$DEC_FOLDER/config/config.toml
+
 # Download genesis and addrbook
 curl -Ls $DEC_GENESIS > $HOME/$DEC_FOLDER/config/genesis.json
 
