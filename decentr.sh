@@ -80,7 +80,6 @@ $DEC config node tcp://localhost:${DEC_PORT}657
 $DEC init New_peer --chain-id $DEC_ID
 
 # Download genesis and addrbook
-rm -rf $DEC_FOLDER/config/genesis.json
 curl -Ls $DEC_GENESIS > $HOME/$DEC_FOLDER/config/genesis.json
 
 # Set Port
@@ -102,21 +101,9 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025$DEC_DENOM\"/
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"1000\"/" $HOME/$DEC_FOLDER/config/app.toml
 sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = \"2\"/" $HOME/$DEC_FOLDER/config/app.toml
 
-# Enable Statesync
+# Enable Snapshot
 $DEC tendermint unsafe-reset-all --home $HOME/$DEC_FOLDER
-NODE1_ID=$(curl -s "https://decentr-rpc.ibs.team:443/status" | jq -r .result.node_info.id)
-NODE1_LISTEN_ADD=$(curl -s "https://decentr-rpc.ibs.team:443/status" | jq -r .result.node_info.listen_addr)
-
-LATEST_HEIGHT=$(curl -s "https://decentr-rpc.ibs.team:443/block" | jq -r .result.block.header.height);
-BLOCK_HEIGHT=$((LATEST_HEIGHT - 1000)); \
-TRUST_HASH=$(curl -s "https://decentr-rpc.ibs.team:443/block?height=$BLOCK_HEIGHT" | jq -r .result.block_id.hash)
-
-sed -i.bak -E "s|^(enable[[:space:]]+=[[:space:]]+).*$|\1true| ; \
-  s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"https://decentr-rpc.ibs.team:443,https://decentr-rpc.ibs.team:443\"| ; \
-  s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
-  s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"| ; \
-  s|^(persistent_peers[[:space:]]+=[[:space:]]+).*$|\1\"${NODE1_ID}@${NODE1_LISTEN_ADD}\"| ; \
-  s|^(seeds[[:space:]]+=[[:space:]]+).*$|\1\"$SEEDS\"|" $DEC_FOLDER/config/config.toml
+curl -o - -L http://snapcrot.hexskrt.net/decentr/dec.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.decentr
 
 # Create Service
 sudo tee /etc/systemd/system/$DEC.service > /dev/null <<EOF
