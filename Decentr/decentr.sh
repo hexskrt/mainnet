@@ -20,7 +20,8 @@ DEC_ID=mainnet-3
 DEC_FOLDER=.decentr
 DEC_VER=v1.6.2
 DEC_REPO=https://github.com/Decentr-net/decentr
-DEC_GENESIS=https://ibs.team/statesync/Decentr/genesis.json
+DEC_GENESIS=http://snapcrot.hexskrt.net/decentr/genesis.json
+DEC_ADDRBOOK=http://snapcrot.hexskrt.net/decentr/addrbook.json
 DEC_DENOM=udec
 DEC_PORT=29
 
@@ -85,6 +86,7 @@ sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$DEC_FOLDER/config/config.to
 
 # Download genesis and addrbook
 curl -Ls $DEC_GENESIS > $HOME/$DEC_FOLDER/config/genesis.json
+curl -Ls $DEC_ADDRBOOK > $HOME/$DEC_FOLDER/config/addrbook.json
 
 # Set Port
 sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${DEC_PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${DEC_PORT}657\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${DEC_PORT}060\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${DEC_PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${DEC_PORT}660\"%" $HOME/$DEC_FOLDER/config/config.toml
