@@ -4,7 +4,7 @@
 wget -O decentr.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/LumenX/decentr.sh && chmod +x decentr.sh && ./decentr.sh
 ```
 
-## SnapShot (2.5 GB) updated every 5 hours
+## Snapshot
 
 ```
 sudo systemctl stop decentrd
