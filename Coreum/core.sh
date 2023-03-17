@@ -23,7 +23,7 @@ CORE_VER=v1.0.0
 CORE_BINARY=https://github.com/CoreumFoundation/coreum/releases/download
 CORE_BIN=cored-linux-amd64
 CORE_GENESIS=https://raw.githubusercontent.com/CoreumFoundation/coreum/master/genesis/coreum-mainnet-1.json > $HOME/.core/config/genesis.json
-CORE_ADDRBOOK=
+CORE_ADDRBOOK=https://raw.githubusercontent.com/hexskrt/mainnet/main/Coreum/addrbook.json
 CORE_DENOM=ucore
 CORE_PORT=30
 
@@ -113,6 +113,12 @@ $CORE config keyring-backend file
 $CORE config node tcp://localhost:${CORE_PORT}657
 $CORE init $CORE_NODENAME --chain-id $CORE_ID
 
+# Set peers and seeds
+PEERS=""
+SEEDS="cbdb7e01d0edc27ec6a444113fde465f88a2bf58@185.188.249.18:30656"
+sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$CORE_FOLDER/$CORE_ID/config/config.toml
+sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$CORE_FOLDER/$CORE_ID/config/config.toml
+
 # Download genesis and addrbook
 curl -Ls $CORE_GENESIS > $HOME/$CORE_FOLDER/$CORE_ID/config/genesis.json
 curl -Ls $CORE_ADDRBOOK > $HOME/$CORE_FOLDER/$CORE_ID/config/addrbook.json
@@ -133,6 +139,13 @@ sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $
 
 # Set minimum gas price
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$CORE_DENOM\"/" $HOME/$CORE_FOLDER/$CORE_ID/config/app.toml
+
+# Enable snapshots
+sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$CORE_FOLDER/$CORE_ID/config/app.toml
+sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = \"5\"/" $HOME/$CORE_FOLDER/$CORE_ID/config/app.toml
+$CORE tendermint unsafe-reset-all --home $HOME/$CORE_FOLDER/$CORE_ID
+
+curl -o - -L http://snapcrot.hexskrt.net/core/core.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/$CORE_FOLDER/$CORE_ID
 
 #Start Service
 sudo systemctl start $CORE
