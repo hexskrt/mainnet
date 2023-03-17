@@ -21,7 +21,7 @@ CORE_FOLDER=.core
 CORE_VER=v1.0.0
 CORE_BINARY=https://github.com/CoreumFoundation/coreum/releases/download
 CORE_BIN=cored-linux-amd64
-CORE_GENESIS=https://github.com/CoreumFoundation/coreum/blob/master/genesis/coreum-mainnet-1.json
+CORE_GENESIS=https://raw.githubusercontent.com/CoreumFoundation/coreum/master/genesis/coreum-mainnet-1.json > $HOME/.core/config/genesis.json
 CORE_DENOM=ucore
 CORE_PORT=30
 
