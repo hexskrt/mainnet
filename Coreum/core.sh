@@ -23,6 +23,7 @@ CORE_VER=v1.0.0
 CORE_BINARY=https://github.com/CoreumFoundation/coreum/releases/download
 CORE_BIN=cored-linux-amd64
 CORE_GENESIS=https://raw.githubusercontent.com/CoreumFoundation/coreum/master/genesis/coreum-mainnet-1.json > $HOME/.core/config/genesis.json
+CORE_ADDRBOOK=
 CORE_DENOM=ucore
 CORE_PORT=30
 
@@ -114,6 +115,7 @@ $CORE init $CORE_NODENAME --chain-id $CORE_ID
 
 # Download genesis and addrbook
 curl -Ls $CORE_GENESIS > $HOME/$CORE_FOLDER/$CORE_ID/config/genesis.json
+curl -Ls $CORE_ADDRBOOK > $HOME/$CORE_FOLDER/$CORE_ID/config/addrbook.json
 
 # Set Port
 sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${CORE_PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${CORE_PORT}657\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${CORE_PORT}060\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${CORE_PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${CORE_PORT}660\"%" $HOME/$CORE_FOLDER/$CORE_ID/config/config.toml
