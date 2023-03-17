@@ -1,6 +1,6 @@
 
 #
-# // Copyright (C) 2022 Salman Wahib (sxlmnwb)
+# // Copyright (C) 2023 Salman Wahib (sxlmnwb) Recoded by Hexskrt
 #
 
 echo -e "\033[0;32m"
@@ -43,7 +43,7 @@ source $HOME/.bash_profile
 
 # Set Vars
 if [ ! $CORE_NODENAME ]; then
-        read -p "sxlzptprjkt@w00t666w00t:~# [ENTER YOUR NODE] > " CORE_NODENAME
+        read -p "hexskrt@hexnodes:~# [ENTER YOUR NODE] > " CORE_NODENAME
         echo 'export CORE_NODENAME='$CORE_NODENAME >> $HOME/.bash_profile
 fi
 echo ""
