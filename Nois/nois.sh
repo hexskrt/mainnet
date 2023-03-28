@@ -74,7 +74,7 @@ make install
 
 # Init generation
 $NOIS config chain-id $NOIS_ID
-$NOIS config keyring-backend test
+$NOIS config keyring-backend file
 $NOIS config node tcp://localhost:${NOIS_PORT}657
 $NOIS init $NOIS_NODENAME --chain-id $NOIS_ID
 
