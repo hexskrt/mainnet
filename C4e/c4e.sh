@@ -111,7 +111,7 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025$C4E_DENOM\"/
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$C4E_FOLDER/config/app.toml
 sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = \"5\"/" $HOME/$C4E_FOLDER/config/app.toml
 $C4E tendermint unsafe-reset-all --home $HOME/$C4E_FOLDER
-curl -o - -L http://snap.hexskrt.net/c4e/c4e.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.c4e-chain
+curl -L http://snap.hexnodes.co/c4e/c4e.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.c4e-chain
 
 # Create Service
 sudo tee /etc/systemd/system/$C4E.service > /dev/null <<EOF
