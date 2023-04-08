@@ -1,7 +1,7 @@
 ## Auto Installation
 
 ```
-wget -O c4e.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/LumenX/c4e.sh && chmod +x c4e.sh && ./c4e.sh
+wget -O c4e.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/C4e/c4e.sh && chmod +x c4e.sh && ./c4e.sh
 ```
 
 ## SnapShot (2.5 GB) updated every 5 hours
