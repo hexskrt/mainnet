@@ -8,7 +8,7 @@ echo "    ██   ██ ██       ██ ██  ████   ██ █�
 echo "    ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
 echo "    ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
 echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
-echo "              Automatic Installer for C4E Network v1.1.0 ";
+echo "              Automatic Installer for C4E Network v1.2.0 ";
 echo -e "\e[0m"
 
 sleep 1
@@ -18,7 +18,7 @@ C4E_WALLET=wallet
 C4E=c4ed
 C4E_ID=perun-1
 C4E_FOLDER=.c4e-chain
-C4E_VER=v1.1.0
+C4E_VER=v1.2.0
 C4E_REPO=https://github.com/chain4energy/c4e-chain.git
 C4E_GENESIS=https://raw.githubusercontent.com/chain4energy/c4e-chains/main/perun-1/genesis.json
 C4E_ADDRBOOK=https://raw.githubusercontent.com/BccNodes/Testnet-Guides/main/Chain4Energy%20Mainnet/addrbook.json
