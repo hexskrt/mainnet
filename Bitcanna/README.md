@@ -22,6 +22,11 @@
 >- RPC : https://rpc.bitcanna.hexnodes.co
 >- gRPC : https://grpc.bitcanna.hexnodes.co
 
+### Auto Installation
+```
+curl -sL https://raw.githubusercontent.com/hexskrt/mainnet/main/Bitcanna/bitcanna.sh > bitcanna.sh && chmod +x bitcanna.sh && ./bitcanna.sh
+```
+
 ### Snapshot ( Update Every 5 Hours )
 ```
 sudo systemctl stop bcnad
