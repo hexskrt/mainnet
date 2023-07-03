@@ -9,24 +9,24 @@ echo "       ██   ██ ██       ██ ██  ████   ██ �
 echo "      ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
 echo "     ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
 echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
-echo "   Cosmovisor Automatic Installer for Decentr | Chain ID : mainnet-3 ";
+echo "   Cosmovisor Automatic Installer for Chain4Energy | Chain ID : perun-1 ";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=decentr
+SOURCE=bcna
 WALLET=wallet
-BINARY=decentrd
-CHAIN=mainnet-3
-FOLDER=.decentr
-VERSION=v1.6.2
-DENOM=udec
+BINARY=c4ed
+CHAIN=perun-1
+FOLDER=.c4e-chain
+VERSION=v1.2.0
+DENOM=uc4ed
 COSMOVISOR=cosmovisor
-REPO=https://github.com/Decentr-net/decentr
-GENESIS=https://snapshots.indonode.net/decentr/genesis.json
-ADDRBOOK=https://snapshots.indonode.net/decentr/addrbook.json
-PORT=103
+REPO=https://github.com/chain4energy/c4e-chain.git
+GENESIS=https://snapshots.nodestake.top/temp/genesis.json
+ADDRBOOK=https://snapshots.nodestake.top/temp/addrbook.json
+PORT=101
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -86,7 +86,7 @@ echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile
 source ~/.bash_profile
 go version
 
-# Get mainnet version of Decentr
+# Get mainnet version of Chain4Energy
 cd $HOME
 rm -rf $SOURCE
 git clone $REPO
@@ -97,7 +97,7 @@ go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
-mv build/linux/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
+mv build/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
 rm -rf build
 
 # Create application symlinks
@@ -111,8 +111,8 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
-SEEDS=""
-PEERS="$(curl -sS https://rpc.decentr.indonode.net/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS="400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@bitcanna.rpc.kjnodes.com:14259"
+PEERS="$(curl -sS https://bitcanna.rpc.kjnodes.com/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -140,7 +140,8 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-curl -L https://snapshots.indonode.net/decentr/decentr-snapshot.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+SNAP_NAME=$(curl -s https://snapshots.nodestake.top/c4e/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
+curl -o - -L https://snapshots.nodestake.top/c4e/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/$FOLDER
 [[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service

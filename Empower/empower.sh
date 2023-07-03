@@ -9,24 +9,24 @@ echo "       ██   ██ ██       ██ ██  ████   ██ �
 echo "      ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
 echo "     ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
 echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
-echo "   Cosmovisor Automatic Installer for Decentr | Chain ID : mainnet-3 ";
+echo "Cosmovisor Automatic Installer for Empowerchain | Chain ID : empowerchain-1";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=decentr
+SOURCE=empowerchain
 WALLET=wallet
-BINARY=decentrd
-CHAIN=mainnet-3
-FOLDER=.decentr
-VERSION=v1.6.2
-DENOM=udec
+BINARY=empowerd
+CHAIN=empowerchain-1
+FOLDER=.empowerchain
+VERSION=v1.0.0
+DENOM=umpwr
 COSMOVISOR=cosmovisor
-REPO=https://github.com/Decentr-net/decentr
-GENESIS=https://snapshots.indonode.net/decentr/genesis.json
-ADDRBOOK=https://snapshots.indonode.net/decentr/addrbook.json
-PORT=103
+REPO=https://github.com/EmpowerPlastic/empowerchain
+GENESIS=https://ss.empower.nodestake.top/genesis.json
+ADDRBOOK=https://ss.empower.nodestake.top/addrbook.json
+PORT=104
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -97,7 +97,7 @@ go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
-mv build/linux/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
+mv build/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
 rm -rf build
 
 # Create application symlinks
@@ -111,8 +111,8 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
-SEEDS=""
-PEERS="$(curl -sS https://rpc.decentr.indonode.net/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS="6740fa259552a628266a85de8c2a3dee7702b8f9@empower-mainnet-seed.itrocket.net:14656"
+PEERS="$(curl -sS https://empower-mainnet-rpc.itrocket.net:443/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -140,7 +140,7 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-curl -L https://snapshots.indonode.net/decentr/decentr-snapshot.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+curl https://mainnet-files.itrocket.net/empower/snap_empower.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/$FOLDER
 [[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service

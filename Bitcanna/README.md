@@ -1,9 +1,3 @@
-<h3><p style="font-size:14px" align="right">Visit Our Website :
-<a href="https://hexnodes.co" target="_blank">Hexnodes</a></p></h3>
-<h3><p style="font-size:14px" align="right">Hetzner :
-<a href="https://hetzner.cloud/?ref=c0IeszbF5Sk4" target="_blank">Deploy Your VPS With Hetzner 20€ Bonus</a></h3>
-<hr>
-
 <p align="center">
   <img height="100" height="auto" src="https://github.com/hexskrt/logos/blob/main/bcna.png?raw=true">
 </p>
@@ -14,7 +8,7 @@
 >- [Bitcanna](https://docs.bitcanna.io/guides/validator-setup-guide)
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/bitcanna
+>-  https://explorer.hexnodes.co/BITCANNA
 
 ### Public Endpoint
 
@@ -74,4 +68,169 @@ curl -Ls https://snap.hexnodes.co/bitcanna/addrbook.json > $HOME/.bcna/config/ad
 ### Genesis
 ```
 curl -Ls https://snap.hexnodes.co/bitcanna/genesis.json > $HOME/.bcna/config/genesis.json
+```
+
+### Bitcanna CLI Cheatsheet
+
+- Always be careful with the capitalized words
+- Specify `--chain-id`
+
+### Wallet Management
+
+Add Wallet
+Specify the value `wallet` with your own wallet name
+
+```
+bcnad keys add wallet
+```
+
+Recover Wallet
+```
+bcnad keys add wallet --recover
+```
+
+List Wallet
+```
+bcnad keys list
+```
+
+Delete Wallet
+```
+bcnad keys delete wallet
+```
+
+Check Wallet Balance
+```
+bcnad q bank balances $(bcnad keys show wallet -a)
+```
+
+### Validator Management
+
+Please adjust `wallet` , `MONIKER` , `YOUR_KEYBASE_ID` , `YOUR_DETAILS` , `YOUUR_WEBSITE_URL`
+
+Create Validator
+```
+bcnad tx staking create-validator \
+  --chain-id bitcanna-1 \
+  --pubkey="$(bcnad tendermint show-validator)" \
+  --moniker="YOUR_MONIKER" \
+  --amount 1000000ubcna \
+  --identity "YOUR_KEYBASE_ID" \
+  --website "YOUR_WEBSITE_URL" \
+  --details "YOUR_DETAILS" \
+  --from wallet \
+  --commission-rate=0.05 \
+  --commission-max-rate=0.20 \
+  --commission-max-change-rate=0.01 \
+  --min-self-delegation 1 \
+  --gas auto \
+  --fees=2000ubcna \
+  -y
+```
+
+Edit Validator
+```
+bcnad tx staking edit-validator \
+--new-moniker "YOUR_MONIKER " \
+--identity "YOUR_KEYBASE_ID" \
+--website "YOUR_WEBSITE_URL" \
+--details "YOUR_DETAILS" \
+--chain-id bitcanna-1 \
+--commission-rate=0.01 \
+--min-self-delegation=1 \
+--from=wallet \
+--gas auto \
+-y
+```
+
+
+Unjail Validator
+```
+bcnad tx slashing unjail --from wallet --chain-id bitcanna-1 --gas auto -y
+```
+
+Check Jailed Reason
+```
+bcnad query slashing signing-info $(bcnad tendermint show-validator)
+```
+
+### Token Management
+
+Withdraw Rewards
+```
+bcnad tx distribution withdraw-all-rewards --from wallet --chain-id bitcanna-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ubcna" -y
+```
+
+Withdraw Rewards with Comission
+```
+bcnad tx distribution withdraw-rewards $(bcnad keys show wallet --bech val -a) --commission --from wallet --chain-id bitcanna-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ubcna" -y
+```
+
+Delegate Token to your own validator
+```
+bcnad tx staking delegate $(bcnad keys show wallet --bech val -a) 100000000ubcna --from wallet --chain-id bitcanna-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ubcna" -y
+```
+
+Delegate Token to other validator
+```
+bcnad tx staking redelegate $(bcnad keys show wallet --bech val -a) <TO_VALOPER_ADDRESS> 100000000ubcna --from wallet --chain-id bitcanna-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ubcna" -y
+```
+
+Unbond Token from your validator
+```
+bcnad tx staking unbond $(bcnad keys show wallet --bech val -a) 100000000ubcna --from wallet --chain-id bitcanna-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ubcna" -y
+```
+
+Send Token to another wallet
+```
+bcnad tx bank send wallet <TO_WALLET_ADDRESS> 100000000ubcna --from wallet --chain-id bitcanna-1
+```
+
+### Governance 
+
+Vote
+You can change the value of `yes` to `no`,`abstain`,`nowithveto`
+
+```
+bcnad tx gov vote 1 yes --from wallet --chain-id bitcanna-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ubcna" -y
+```
+
+### Other
+
+Set Your own Custom Ports
+You can change value `CUSTOM_PORT=100` To any other ports
+```
+CUSTOM_PORT=100
+sed -i -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${CUSTOM_PORT}58\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${CUSTOM_PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${CUSTOM_PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${CUSTOM_PORT}56\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${CUSTOM_PORT}60\"%" $HOME/.bcna/config/config.toml
+sed -i -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${CUSTOM_PORT}17\"%; s%^address = \":8080\"%address = \":${CUSTOM_PORT}80\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${CUSTOM_PORT}90\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${CUSTOM_PORT}91\"%" $HOME/.bcna/config/app.toml
+```
+
+Enable Indexing usually enabled by default
+```
+sed -i -e 's|^indexer *=.*|indexer = "kv"|' $HOME/.bcna/config/config.toml
+```
+
+Disable Indexing
+```
+sed -i -e 's|^indexer *=.*|indexer = "null"|' $HOME/.bcna/config/config.toml
+```
+
+Reset Chain Data
+```
+bcnad tendermint unsafe-reset-all --home $HOME/.bcna --keep-addr-book
+```
+
+### Delete Node
+
+WARNING! Use this command wisely 
+Backup your key first it will remove bitcanna
+
+```
+sudo systemctl stop bcnad && \
+sudo systemctl disable bcnad && \
+rm /etc/systemd/system/bcnad.service && \
+sudo systemctl daemon-reload && \
+cd $HOME && \
+rm -rf .bcna && \
+rm -rf $(which bcnad)
 ```

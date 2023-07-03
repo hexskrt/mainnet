@@ -1,10 +1,27 @@
-## Auto Installation
+<p align="center">
+  <img height="100" height="auto" src="https://github.com/hexskrt/logos/blob/main/c4e.jpg?raw=true">
+</p>
 
+# Chain4Energy Mainnet | Chain ID : perun-1
+
+### Official Documentation:
+>- [Chain4Energy](https://docs.c4e.io/validatorsGuide/mainnet/system-preparation.html)
+
+### Custom Explorer:
+>-  https://explorer.hexnodes.co/CHAIN4ENERGY
+
+### Public Endpoint
+
+>- API : https://lcd.chain4energy.hexnodes.co
+>- RPC : https://rpc.chain4energy.hexnodes.co
+>- gRPC : https://grpc.chain4energy.hexnodes.co
+
+### Auto Installation
 ```
-wget -O c4e.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/C4e/c4e.sh && chmod +x c4e.sh && ./c4e.sh
+wget -O c4e.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Chain4Energy/c4e.sh && chmod +x c4e.sh && ./c4e.sh
 ```
 
-## SnapShot (2.5 GB) updated every 5 hours
+### Snapshot updated every 5 hours
 
 ```
 sudo systemctl stop c4ed
@@ -16,15 +33,15 @@ sudo systemctl restart c4ed && journalctl -u c4ed -f -o cat
 ```
 
 
-## State Sync
+### State Sync
 
 ```
 sudo systemctl stop c4ed
 cp $HOME/.c4e-chain/data/priv_validator_state.json $HOME/.c4e-chain/priv_validator_state.json.backup
 c4ed tendermint unsafe-reset-all --home $HOME/.c4e-chain
 
-STATE_SYNC_RPC=https://rpc.c4e.hexskrt.net:27656
-STATE_SYNC_PEER=a2012f7a7f735cdb80b1536b012f708002fe74de@rpc.c4e.hexskrt.net:27656
+STATE_SYNC_RPC=https://rpc.c4e.hexnodes.co:27656
+STATE_SYNC_PEER=a2012f7a7f735cdb80b1536b012f708002fe74de@rpc.c4e.hexnodes.co:27656
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
@@ -38,7 +55,7 @@ mv $HOME/.c4e-chain/priv_validator_state.json.backup $HOME/.c4e-chain/data/priv_
 sudo systemctl restart c4e-chaind && sudo journalctl -u c4e-chaind -f -o cat
 ```
 
-## C4E CLI Cheatsheet
+### C4E CLI Cheatsheet
 
 - Always be careful with the capitalized words
 - Specify `--chain-id`
@@ -166,11 +183,11 @@ c4ed tx gov vote 1 yes --from wallet --chain-id perun-1 --gas-adjustment 1.4 --g
 ### Other
 
 Set Your own Custom Ports
-You can change value `CUSTOM_PORT=15` To any other ports
+You can change value `CUSTOM_PORT=101` To any other ports
 ```
-CUSTOM_PORT=15
-sed -i -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${CUSTOM_PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${CUSTOM_PORT}657\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${CUSTOM_PORT}060\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${CUSTOM_PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${CUSTOM_PORT}660\"%" $HOME/.c4e-chain/config/config.toml
-sed -i -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${CUSTOM_PORT}317\"%; s%^address = \":8080\"%address = \":${CUSTOM_PORT}080\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${CUSTOM_PORT}090\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${CUSTOM_PORT}091\"%" $HOME/.c4e-chain/config/app.toml
+CUSTOM_PORT=101
+sed -i -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${CUSTOM_PORT}58\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${CUSTOM_PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${CUSTOM_PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${CUSTOM_PORT}56\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${CUSTOM_PORT}60\"%" $HOME/.c4e-chain/config/config.toml
+sed -i -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${CUSTOM_PORT}317\"%; s%^address = \":8080\"%address = \":${CUSTOM_PORT}80\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${CUSTOM_PORT}90\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${CUSTOM_PORT}91\"%" $HOME/.c4e-chain/config/app.toml
 ```
 
 Enable Indexing usually enabled by default
@@ -191,7 +208,7 @@ c4ed tendermint unsafe-reset-all --home $HOME/.c4e-chain --keep-addr-book
 ### Delete Node
 
 WARNING! Use this command wisely 
-Backup your key first it will remove dymension
+Backup your key first it will remove c4e
 
 ```
 sudo systemctl stop c4ed && \
