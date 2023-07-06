@@ -9,24 +9,24 @@ echo "       ██   ██ ██       ██ ██  ████   ██ �
 echo "      ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
 echo "     ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
 echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
-echo "Cosmovisor Automatic Installer for Planq | Chain ID : planq_7070-2";
+echo "Cosmovisor Automatic Installer for Terp | Chain ID : morocco-1";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=planq
+SOURCE=terp-core
 WALLET=wallet
-BINARY=planqd
-CHAIN=planq_7070-2
-FOLDER=.planqd
-VERSION=v1.0.6
-DENOM=aplanq
+BINARY=terpd
+CHAIN=morocco-1
+FOLDER=.terp
+VERSION=v1.0.0-stable
+DENOM=uterp
 COSMOVISOR=cosmovisor
-REPO=https://github.com/planq-network/planq.git
-GENESIS=https://snapshot.hexnodes.co/planq/genesis.json
-ADDRBOOK=https://snapshot.hexnodes.co/planq/addrbook.json
-PORT=107
+REPO=https://github.com/terpnetwork/terp-core.git
+GENESIS=https://raw.githubusercontent.com/terpnetwork/mainnet/main/morocco-1/genesis.json
+ADDRBOOK=https://snapshots2.nodejumper.io/terpnetwork/addrbook.json
+PORT=108
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -36,15 +36,15 @@ fi
 
 echo "Verify the information below before proceeding with the installation!"
 echo ""
-echo -e "NODE NAME      : \e[1m\e[35m$NODENAME\e[0m"
-echo -e "WALLET NAME    : \e[1m\e[35m$WALLET\e[0m"
-echo -e "CHAIN NAME     : \e[1m\e[35m$CHAIN\e[0m"
-echo -e "NODE VERSION   : \e[1m\e[35m$VERSION\e[0m"
-echo -e "NODE FOLDER    : \e[1m\e[35m$FOLDER\e[0m"
-echo -e "NODE DENOM     : \e[1m\e[35m$DENOM\e[0m"
-echo -e "NODE ENGINE    : \e[1m\e[35m$COSMOVISOR\e[0m"
-echo -e "SOURCE CODE    : \e[1m\e[35m$REPO\e[0m"
-echo -e "NODE PORT      : \e[1m\e[35m$PORT\e[0m"
+echo -e "NODE NAME      : \e[1m\e[32m$NODENAME\e[0m"
+echo -e "WALLET NAME    : \e[1m\e[32m$WALLET\e[0m"
+echo -e "CHAIN NAME     : \e[1m\e[32m$CHAIN\e[0m"
+echo -e "NODE VERSION   : \e[1m\e[32m$VERSION\e[0m"
+echo -e "NODE FOLDER    : \e[1m\e[32m$FOLDER\e[0m"
+echo -e "NODE DENOM     : \e[1m\e[32m$DENOM\e[0m"
+echo -e "NODE ENGINE    : \e[1m\e[32m$COSMOVISOR\e[0m"
+echo -e "SOURCE CODE    : \e[1m\e[32m$REPO\e[0m"
+echo -e "NODE PORT      : \e[1m\e[32m$PORT\e[0m"
 echo ""
 
 read -p "Is the above information correct? (y/n) " choice
@@ -112,7 +112,7 @@ $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
 SEEDS=""
-PEERS="$(curl -sS https://rpc.planq.nodestake.top/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+PEERS="$(curl -sS https://rpc.terp.nodestake.top/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -140,8 +140,8 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-SNAP_NAME=$(curl -s https://snapshots.nodestake.top/planq/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
-curl -o - -L https://snapshots.nodestake.top/planq/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/$FOLDER
+SNAP_NAME=$(curl -s https://snapshots.nodestake.top/terp/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
+curl -o - -L https://snapshots.nodestake.top/terp/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/$FOLDER
 [[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service
@@ -172,9 +172,9 @@ sudo systemctl enable $BINARY
 echo -e "\033[0;32m=============================================================\033[0m"
 echo -e "\033[0;32mCONGRATS! SETUP FINISHED\033[0m"
 echo ""
-echo -e "CHECK STATUS BINARY : \033[1m\033[35msystemctl status $BINARY\033[0m"
-echo -e "CHECK RUNNING LOGS : \033[1m\033[35mjournalctl -fu $BINARY -o cat\033[0m"
-echo -e "CHECK LOCAL STATUS : \033[1m\033[35mcurl -s localhost:${PORT}57/status | jq .result.sync_info\033[0m"
+echo -e "CHECK STATUS BINARY : \033[1m\033[32msystemctl status $BINARY\033[0m"
+echo -e "CHECK RUNNING LOGS : \033[1m\033[32mjournalctl -fu $BINARY -o cat\033[0m"
+echo -e "CHECK LOCAL STATUS : \033[1m\033[32mcurl -s localhost:${PORT}57/status | jq .result.sync_info\033[0m"
 echo -e "\033[0;32m=============================================================\033[0m"
 
 # End

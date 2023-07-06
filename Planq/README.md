@@ -39,7 +39,6 @@ cp $HOME/.planqd/data/priv_validator_state.json $HOME/.planqd/priv_validator_sta
 planqd tendermint unsafe-reset-all --home $HOME/.planqd
 
 STATE_SYNC_RPC=https://rpc.planq.hexnodes.co:443
-STATE_SYNC_PEER=8391cf5a7fe59098205015870635f90acfb5dcb4@185.202.239.161:33656
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
@@ -53,7 +52,7 @@ mv $HOME/.planqd/priv_validator_state.json.backup $HOME/.planqd/data/priv_valida
 sudo systemctl restart planqd && sudo journalctl -u planqd -f -o cat
 ```
 
-### Empower CLI Cheatsheet
+### Planq CLI Cheatsheet
 
 - Always be careful with the capitalized words
 - Specify `--chain-id`
@@ -181,7 +180,7 @@ planqd tx gov vote 1 yes --from wallet --chain-id planq_7070-2 --gas-adjustment 
 ### Other
 
 Set Your own Custom Ports
-You can change value `CUSTOM_PORT=104` To any other ports
+You can change value `CUSTOM_PORT=107` To any other ports
 ```
 CUSTOM_PORT=107
 sed -i -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${CUSTOM_PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${CUSTOM_PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${CUSTOM_PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${CUSTOM_PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${CUSTOM_PORT}60\"%" $HOME/.planqd/config/config.toml
@@ -206,7 +205,7 @@ planqd tendermint unsafe-reset-all --home $HOME/.planqd --keep-addr-book
 ### Delete Node
 
 WARNING! Use this command wisely 
-Backup your key first it will remove empower
+Backup your key first it will remove planq
 
 ```
 sudo systemctl stop planqd && \

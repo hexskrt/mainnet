@@ -9,24 +9,24 @@ echo "       ██   ██ ██       ██ ██  ████   ██ �
 echo "      ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
 echo "     ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
 echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
-echo "Cosmovisor Automatic Installer for Planq | Chain ID : planq_7070-2";
+echo "      Cosmovisor Automatic Installer for Gitopia | Chain ID : gitopia ";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=planq
+SOURCE=gitopia
 WALLET=wallet
-BINARY=planqd
-CHAIN=planq_7070-2
-FOLDER=.planqd
-VERSION=v1.0.6
-DENOM=aplanq
+BINARY=gitopiad
+CHAIN=gitopia
+FOLDER=.gitopia
+VERSION=v2.0.0
+DENOM=ulore
 COSMOVISOR=cosmovisor
-REPO=https://github.com/planq-network/planq.git
-GENESIS=https://snapshot.hexnodes.co/planq/genesis.json
-ADDRBOOK=https://snapshot.hexnodes.co/planq/addrbook.json
-PORT=107
+REPO=https://github.com/gitopia/gitopia.git
+GENESIS=https://snapshots.nodestake.top/gitopia/genesis.json
+ADDRBOOK=https://snapshots.nodestake.top/gitopia/addrbook.json
+PORT=105
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -86,14 +86,13 @@ echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile
 source ~/.bash_profile
 go version
 
-# Get mainnet version of Planq
+# Get mainnet version of Gitopia
 cd $HOME
 rm -rf $SOURCE
 git clone $REPO
 cd $SOURCE
 git checkout $VERSION
 make build
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
@@ -106,13 +105,12 @@ sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 
 # Init generation
 $BINARY config keyring-backend file
-$BINARY config chain-d $CHAIN
 $BINARY config node tcp://localhost:${PORT}57
-$BINARY init $NODENAME --chain-id $CHAIN
+$BINARY config chain-id $CHAIN
 
 # Set peers and seeds
-SEEDS=""
-PEERS="$(curl -sS https://rpc.planq.nodestake.top/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS="400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@gitopia.rpc.kjnodes.com:14159"
+PEERS="$(curl -sS https://gitopia.rpc.kjnodes.com:443/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -137,11 +135,14 @@ sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $
 # Set minimum gas price
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$FOLDER/config/app.toml
 
+# Disable Indexer
+indexer="null" && \
+sed -i -e "s/^indexer *=.*/indexer = \"$indexer\"/" $HOME/$FOLDER/config/config.toml
+
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-SNAP_NAME=$(curl -s https://snapshots.nodestake.top/planq/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
-curl -o - -L https://snapshots.nodestake.top/planq/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/$FOLDER
+curl -L https://snapshots.kjnodes.com/gitopia/snapshot_latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
 [[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service
@@ -172,9 +173,9 @@ sudo systemctl enable $BINARY
 echo -e "\033[0;32m=============================================================\033[0m"
 echo -e "\033[0;32mCONGRATS! SETUP FINISHED\033[0m"
 echo ""
-echo -e "CHECK STATUS BINARY : \033[1m\033[35msystemctl status $BINARY\033[0m"
-echo -e "CHECK RUNNING LOGS : \033[1m\033[35mjournalctl -fu $BINARY -o cat\033[0m"
-echo -e "CHECK LOCAL STATUS : \033[1m\033[35mcurl -s localhost:${PORT}57/status | jq .result.sync_info\033[0m"
+echo -e "CHECK STATUS BINARY : \033[1m\033[32msystemctl status $BINARY\033[0m"
+echo -e "CHECK RUNNING LOGS : \033[1m\033[32mjournalctl -fu $BINARY -o cat\033[0m"
+echo -e "CHECK LOCAL STATUS : \033[1m\033[32mcurl -s localhost:${PORT}57/status | jq .result.sync_info\033[0m"
 echo -e "\033[0;32m=============================================================\033[0m"
 
 # End

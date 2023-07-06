@@ -23,7 +23,7 @@ wget -O decentr.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Decent
 sudo systemctl stop decentrd
 cp $HOME/.decentr/data/priv_validator_state.json $HOME/.decentr/priv_validator_state.json.backup
 rm -rf $HOME/.decentr/data
-curl -o - -L http://snap.hexnodes.co/c4e/c4e.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.decentr
+curl -o - -L http://snap.hexnodes.co/decemtr/decentr.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.decentr
 mv $HOME/.decentr/priv_validator_state.json.backup $HOME/.decentr/data/priv_validator_state.json
 sudo systemctl restart decentrd && journalctl -u decentrd -f -o cat
 ```
@@ -35,8 +35,7 @@ sudo systemctl stop decentrd
 cp $HOME/.decentr/data/priv_validator_state.json $HOME/.decentr/priv_validator_state.json.backup
 decentrd tendermint unsafe-reset-all --home $HOME/.decentr
 
-STATE_SYNC_RPC=https://rpc.c4e.hexskrt.net:27656
-STATE_SYNC_PEER=a2012f7a7f735cdb80b1536b012f708002fe74de@rpc.c4e.hexskrt.net:27656
+STATE_SYNC_RPC=https://rpc.decentr.hexnodes.co:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
@@ -47,10 +46,10 @@ s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
 s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"|" $HOME/.decentr/config/config.toml
 
 mv $HOME/.decentr/priv_validator_state.json.backup $HOME/.decentr/data/priv_validator_state.json
-sudo systemctl restart c4e-chaind && sudo journalctl -u c4e-chaind -f -o cat
+sudo systemctl restart decentrd && sudo journalctl -u decentrd -f -o cat
 ```
 
-### C4E CLI Cheatsheet
+### Decentr CLI Cheatsheet
 
 - Always be careful with the capitalized words
 - Specify `--chain-id`
@@ -91,10 +90,10 @@ Please adjust `wallet` , `MONIKER` , `YOUR_KEYBASE_ID` , `YOUR_DETAILS` , `YOUUR
 Create Validator
 ```
 decentrd tx staking create-validator \
-  --chain-id centauri-1 \
+  --chain-id mainnet-3 \
   --pubkey="$(decentrd tendermint show-validator)" \
   --moniker="YOUR_MONIKER" \
-  --amount 1000000ppica \
+  --amount 1000000udec \
   --identity "YOUR_KEYBASE_ID" \
   --website "YOUR_WEBSITE_URL" \
   --details "YOUR_DETAILS" \
@@ -104,7 +103,7 @@ decentrd tx staking create-validator \
   --commission-max-change-rate=0.01 \
   --min-self-delegation 1 \
   --gas auto \
-  --fees=2000ppica \
+  --fees=2000udec \
   -y
 ```
 
@@ -115,7 +114,7 @@ decentrd tx staking edit-validator \
 --identity "YOUR_KEYBASE_ID" \
 --website "YOUR_WEBSITE_URL" \
 --details "YOUR_DETAILS" \
---chain-id centauri-1 \
+--chain-id mainnet-3 \
 --commission-rate=0.01 \
 --min-self-delegation=1 \
 --from=wallet \
@@ -126,7 +125,7 @@ decentrd tx staking edit-validator \
 
 Unjail Validator
 ```
-decentrd tx slashing unjail --from wallet --chain-id centauri-1 --gas auto -y
+decentrd tx slashing unjail --from wallet --chain-id mainnet-3 --gas auto -y
 ```
 
 Check Jailed Reason
@@ -138,32 +137,32 @@ decentrd query slashing signing-info $(decentrd tendermint show-validator)
 
 Withdraw Rewards
 ```
-decentrd tx distribution withdraw-all-rewards --from wallet --chain-id centauri-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ppica" -y
+decentrd tx distribution withdraw-all-rewards --from wallet --chain-id mainnet-3 --gas-adjustment 1.4 --gas auto --gas-prices="0.025udec" -y
 ```
 
 Withdraw Rewards with Comission
 ```
-decentrd tx distribution withdraw-rewards $(decentrd keys show wallet --bech val -a) --commission --from wallet --chain-id centauri-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ppica" -y
+decentrd tx distribution withdraw-rewards $(decentrd keys show wallet --bech val -a) --commission --from wallet --chain-id mainnet-3 --gas-adjustment 1.4 --gas auto --gas-prices="0.025udec" -y
 ```
 
 Delegate Token to your own validator
 ```
-decentrd tx staking delegate $(decentrd keys show wallet --bech val -a) 100000000ppica --from wallet --chain-id centauri-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ppica" -y
+decentrd tx staking delegate $(decentrd keys show wallet --bech val -a) 100000000udec --from wallet --chain-id mainnet-3 --gas-adjustment 1.4 --gas auto --gas-prices="0.025udec" -y
 ```
 
 Delegate Token to other validator
 ```
-decentrd tx staking redelegate $(decentrd keys show wallet --bech val -a) <TO_VALOPER_ADDRESS> 100000000ppica --from wallet --chain-id centauri-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ppica" -y
+decentrd tx staking redelegate $(decentrd keys show wallet --bech val -a) <TO_VALOPER_ADDRESS> 100000000udec --from wallet --chain-id mainnet-3 --gas-adjustment 1.4 --gas auto --gas-prices="0.025udec" -y
 ```
 
 Unbond Token from your validator
 ```
-decentrd tx staking unbond $(decentrd keys show wallet --bech val -a) 100000000ppica --from wallet --chain-id centauri-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ppica" -y
+decentrd tx staking unbond $(decentrd keys show wallet --bech val -a) 100000000udec --from wallet --chain-id mainnet-3 --gas-adjustment 1.4 --gas auto --gas-prices="0.025udec" -y
 ```
 
 Send Token to another wallet
 ```
-decentrd tx bank send wallet <TO_WALLET_ADDRESS> 100000000ppica --from wallet --chain-id centauri-1
+decentrd tx bank send wallet <TO_WALLET_ADDRESS> 100000000udec --from wallet --chain-id mainnet-3
 ```
 
 ### Governance 
@@ -172,7 +171,7 @@ Vote
 You can change the value of `yes` to `no`,`abstain`,`nowithveto`
 
 ```
-decentrd tx gov vote 1 yes --from wallet --chain-id centauri-1 --gas-adjustment 1.4 --gas auto --gas-prices="0.025ppica" -y
+decentrd tx gov vote 1 yes --from wallet --chain-id mainnet-3 --gas-adjustment 1.4 --gas auto --gas-prices="0.025udec" -y
 ```
 
 ### Other

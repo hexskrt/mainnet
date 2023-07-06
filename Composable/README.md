@@ -24,7 +24,7 @@ wget -O centauri.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Compo
 sudo systemctl stop centaurid
 cp $HOME/.banksy/data/priv_validator_state.json $HOME/.banksy/priv_validator_state.json.backup
 rm -rf $HOME/.banksy/data
-curl -o - -L http://snap.hexnodes.co/c4e/c4e.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.banksy
+curl -o - -L http://snap.hexnodes.co/composable/composable.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.banksy
 mv $HOME/.banksy/priv_validator_state.json.backup $HOME/.banksy/data/priv_validator_state.json
 sudo systemctl restart centaurid && journalctl -u centaurid -f -o cat
 ```
@@ -37,8 +37,7 @@ sudo systemctl stop centaurid
 cp $HOME/.banksy/data/priv_validator_state.json $HOME/.banksy/priv_validator_state.json.backup
 centaurid tendermint unsafe-reset-all --home $HOME/.banksy
 
-STATE_SYNC_RPC=https://rpc.c4e.hexskrt.net:27656
-STATE_SYNC_PEER=a2012f7a7f735cdb80b1536b012f708002fe74de@rpc.c4e.hexskrt.net:27656
+STATE_SYNC_RPC=https://rpc.composable.hexnodes.co:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
@@ -49,10 +48,10 @@ s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
 s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"|" $HOME/.banksy/config/config.toml
 
 mv $HOME/.banksy/priv_validator_state.json.backup $HOME/.banksy/data/priv_validator_state.json
-sudo systemctl restart c4e-chaind && sudo journalctl -u c4e-chaind -f -o cat
+sudo systemctl restart centaurid && sudo journalctl -u centaurid -f -o cat
 ```
 
-### C4E CLI Cheatsheet
+### Composable CLI Cheatsheet
 
 - Always be careful with the capitalized words
 - Specify `--chain-id`

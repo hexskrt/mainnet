@@ -38,8 +38,7 @@ sudo systemctl stop empowerd
 cp $HOME/.empowerchain/data/priv_validator_state.json $HOME/.empowerchain/priv_validator_state.json.backup
 empowerd tendermint unsafe-reset-all --home $HOME/.empowerchain
 
-STATE_SYNC_RPC=https://rpc.empowerchain.hexnodes.co:27656
-STATE_SYNC_PEER=a2012f7a7f735cdb80b1536b012f708002fe74de@https://rpc.empowerchain.hexnodes.co:27656
+STATE_SYNC_RPC=https://rpc.empowerchain.hexnodes.co:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# // Copyright (C) 2023 Salman Wahib x NodeX Capital Recoded By Hexnodes
+# // Copyright (C) 2023 Salman Wahib Recoded By NodeX Capital
 #
 
 echo -e "\033[0;32m"
@@ -9,24 +9,24 @@ echo "       ██   ██ ██       ██ ██  ████   ██ �
 echo "      ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
 echo "     ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
 echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
-echo "Cosmovisor Automatic Installer for Planq | Chain ID : planq_7070-2";
+echo "     Cosmovisor Automatic Installer for Ixo World | Chain ID : ixo-5 ";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=planq
+SOURCE=ixo-blockchain
 WALLET=wallet
-BINARY=planqd
-CHAIN=planq_7070-2
-FOLDER=.planqd
-VERSION=v1.0.6
-DENOM=aplanq
+BINARY=ixod
+CHAIN=ixo-5
+FOLDER=.ixod
+VERSION=v0.20.1
+DENOM=uixo
+REPO=https://github.com/ixofoundation/ixo-blockchain.git
 COSMOVISOR=cosmovisor
-REPO=https://github.com/planq-network/planq.git
-GENESIS=https://snapshot.hexnodes.co/planq/genesis.json
-ADDRBOOK=https://snapshot.hexnodes.co/planq/addrbook.json
-PORT=107
+GENESIS=https://anode.team/IXO/main/genesis.json
+ADDRBOOK=https://anode.team/IXO/main/addrbook.json
+PORT=106
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -86,18 +86,17 @@ echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile
 source ~/.bash_profile
 go version
 
-# Get mainnet version of Planq
+# Get mainnet version of IXO
 cd $HOME
 rm -rf $SOURCE
 git clone $REPO
 cd $SOURCE
 git checkout $VERSION
 make build
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
-mv build/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
+mv build/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/$BINARY
 rm -rf build
 
 # Create application symlinks
@@ -105,14 +104,11 @@ ln -s $HOME/$FOLDER/$COSMOVISOR/genesis $HOME/$FOLDER/$COSMOVISOR/current
 sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 
 # Init generation
-$BINARY config keyring-backend file
-$BINARY config chain-d $CHAIN
-$BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
-# Set peers and seeds
-SEEDS=""
-PEERS="$(curl -sS https://rpc.planq.nodestake.top/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+# Set peers and
+PEERS="$(curl -sS https://rpc-ixo-ia.cosmosia.notional.ventures/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS="20e1000e88125698264454a884812746c2eb4807@seeds.lavenderfive.com:16656"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -137,12 +133,21 @@ sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $
 # Set minimum gas price
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$FOLDER/config/app.toml
 
-# Enable snapshots
+# Enable State Sync
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
-$BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-SNAP_NAME=$(curl -s https://snapshots.nodestake.top/planq/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
-curl -o - -L https://snapshots.nodestake.top/planq/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/$FOLDER
-[[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
+$BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER
+
+STATE_SYNC_RPC=https://ixo-rpc.ibs.team:443
+LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
+SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
+SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
+
+sed -i \
+  -e "s|^enable *=.*|enable = true|" \
+  -e "s|^rpc_servers *=.*|rpc_servers = \"$STATE_SYNC_RPC,$STATE_SYNC_RPC\"|" \
+  -e "s|^trust_height *=.*|trust_height = $SYNC_BLOCK_HEIGHT|" \
+  -e "s|^trust_hash *=.*|trust_hash = \"$SYNC_BLOCK_HASH\"|" \
+  $HOME/$FOLDER/config/config.toml
 
 # Create Service
 sudo tee /etc/systemd/system/$BINARY.service > /dev/null << EOF
@@ -152,7 +157,7 @@ After=network-online.target
 
 [Service]
 User=$USER
-ExecStart=$(which cosmovisor) run start
+ExecStart=$(which cosmovisor) run start --rpc.laddr tcp://localhost:${PORT}57
 Restart=on-failure
 RestartSec=10
 LimitNOFILE=65535
@@ -165,16 +170,16 @@ WantedBy=multi-user.target
 EOF
 
 # Register And Start Service
-sudo systemctl start $BINARY
 sudo systemctl daemon-reload
 sudo systemctl enable $BINARY
+sudo systemctl start $BINARY
 
 echo -e "\033[0;32m=============================================================\033[0m"
 echo -e "\033[0;32mCONGRATS! SETUP FINISHED\033[0m"
 echo ""
-echo -e "CHECK STATUS BINARY : \033[1m\033[35msystemctl status $BINARY\033[0m"
-echo -e "CHECK RUNNING LOGS : \033[1m\033[35mjournalctl -fu $BINARY -o cat\033[0m"
-echo -e "CHECK LOCAL STATUS : \033[1m\033[35mcurl -s localhost:${PORT}57/status | jq .result.sync_info\033[0m"
+echo -e "CHECK STATUS BINARY : \033[1m\033[32msystemctl status $BINARY\033[0m"
+echo -e "CHECK RUNNING LOGS : \033[1m\033[32mjournalctl -fu $BINARY -o cat\033[0m"
+echo -e "CHECK LOCAL STATUS : \033[1m\033[32mcurl -s localhost:${PORT}57/status | jq .result.sync_info\033[0m"
 echo -e "\033[0;32m=============================================================\033[0m"
 
 # End
