@@ -19,6 +19,16 @@
 wget -O oraichain.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/oraichain/oraichain.sh && chmod +x oraichain.sh && ./oraichain.sh
 ```
 
+### Genesis
+```
+wget -O https://snapshot.hexnodes.co/oraid/genesis.json $HOME/.oraid/config/genesis.json
+```
+
+### Addrbook
+```
+wget -O https://snapshot.hexnodes.co/oraid/addrbook.json $HOME/.oraid/config/addrbook.json
+```
+
 ### Snapshot
 
 ```
