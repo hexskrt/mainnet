@@ -9,24 +9,23 @@ echo "       ██   ██ ██       ██ ██  ████   ██ �
 echo "      ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
 echo "     ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
 echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
-echo "Cosmovisor Automatic Installer for Terp | Chain ID : morocco-1";
+echo "         Automatic Installer for Oraichain | Chain ID : Oraichain ";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=terp-core
+SOURCE=orai
 WALLET=wallet
-BINARY=terpd
-CHAIN=morocco-1
-FOLDER=.terp
-VERSION=v1.0.0-stable
-DENOM=uterp
-COSMOVISOR=cosmovisor
-REPO=https://github.com/terpnetwork/terp-core.git
-GENESIS=https://raw.githubusercontent.com/terpnetwork/mainnet/main/morocco-1/genesis.json
-ADDRBOOK=https://snapshots2.nodejumper.io/terpnetwork/addrbook.json
-PORT=109
+BINARY=oraid
+CHAIN=Oraichain
+FOLDER=.oraid
+VERSION=v0.41.3
+DENOM=orai
+REPO=https://github.com/oraichain/orai
+GENESIS=https://snapshot.hexnodes.co/oraid/genesis.json
+ADDRBOOK=https://snapshot.hexnodes.co/oraid/genesis.json
+PORT=107
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -36,15 +35,14 @@ fi
 
 echo "Verify the information below before proceeding with the installation!"
 echo ""
-echo -e "NODE NAME      : \e[1m\e[32m$NODENAME\e[0m"
-echo -e "WALLET NAME    : \e[1m\e[32m$WALLET\e[0m"
-echo -e "CHAIN NAME     : \e[1m\e[32m$CHAIN\e[0m"
-echo -e "NODE VERSION   : \e[1m\e[32m$VERSION\e[0m"
-echo -e "NODE FOLDER    : \e[1m\e[32m$FOLDER\e[0m"
-echo -e "NODE DENOM     : \e[1m\e[32m$DENOM\e[0m"
-echo -e "NODE ENGINE    : \e[1m\e[32m$COSMOVISOR\e[0m"
-echo -e "SOURCE CODE    : \e[1m\e[32m$REPO\e[0m"
-echo -e "NODE PORT      : \e[1m\e[32m$PORT\e[0m"
+echo -e "NODE NAME      : \e[1m\e[35m$NODENAME\e[0m"
+echo -e "WALLET NAME    : \e[1m\e[35m$WALLET\e[0m"
+echo -e "CHAIN NAME     : \e[1m\e[35m$CHAIN\e[0m"
+echo -e "NODE VERSION   : \e[1m\e[35m$VERSION\e[0m"
+echo -e "NODE FOLDER    : \e[1m\e[35m$FOLDER\e[0m"
+echo -e "NODE DENOM     : \e[1m\e[35m$DENOM\e[0m"
+echo -e "SOURCE CODE    : \e[1m\e[35m$REPO\e[0m"
+echo -e "NODE PORT      : \e[1m\e[35m$PORT\e[0m"
 echo ""
 
 read -p "Is the above information correct? (y/n) " choice
@@ -57,7 +55,6 @@ echo "export DENOM=${DENOM}" >> $HOME/.bash_profile
 echo "export CHAIN=${CHAIN}" >> $HOME/.bash_profile
 echo "export FOLDER=${FOLDER}" >> $HOME/.bash_profile
 echo "export VERSION=${VERSION}" >> $HOME/.bash_profile
-echo "export COSMOVISOR=${COSMOVISOR}" >> $HOME/.bash_profile
 echo "export REPO=${REPO}" >> $HOME/.bash_profile
 echo "export GENESIS=${GENESIS}" >> $HOME/.bash_profile
 echo "export ADDRBOOK=${ADDRBOOK}" >> $HOME/.bash_profile
@@ -86,33 +83,21 @@ echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile
 source ~/.bash_profile
 go version
 
-# Get mainnet version of Planq
+# Get mainnet version of Oraichain
 cd $HOME
 rm -rf $SOURCE
 git clone $REPO
 cd $SOURCE
 git checkout $VERSION
-make build
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
-
-# Prepare binaries for Cosmovisor
-mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
-mv build/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
-rm -rf build
-
-# Create application symlinks
-ln -s $HOME/$FOLDER/$COSMOVISOR/genesis $HOME/$FOLDER/$COSMOVISOR/current
-sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
+make install
+mv $(which oraid) /usr/local/bin/
 
 # Init generation
-$BINARY config keyring-backend file
-$BINARY config chain-d $CHAIN
-$BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
-# Set peers and seeds
+# Set peers and
+PEERS="$(curl -sS https://rpc.oraichain.hexnodes.co/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 SEEDS=""
-PEERS="$(curl -sS https://rpc.terp.nodestake.top/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -135,39 +120,34 @@ sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every
 sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/$FOLDER/config/app.toml
 
 # Set minimum gas price
-sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$FOLDER/config/app.toml
+sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.001$DENOM\"/" $HOME/$FOLDER/config/app.toml
 
-# Enable snapshots
+# Enable Snapshot
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
-$BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-SNAP_NAME=$(curl -s https://snapshots.nodestake.top/terp/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
-curl -o - -L https://snapshots.nodestake.top/terp/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/$FOLDER
-[[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
+$BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER
+curl -L http://snapshot.hexnodes.co/oraid/oraid.latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
 
 # Create Service
-sudo tee /etc/systemd/system/$BINARY.service > /dev/null << EOF
+sudo tee /etc/systemd/system/$BINARY.service > /dev/null <<EOF
 [Unit]
 Description=$BINARY
 After=network-online.target
 
 [Service]
 User=$USER
-ExecStart=$(which cosmovisor) run start
+ExecStart=$(which oraid) start --home $HOME/.oraid --rpc.laddr tcp://localhost:$(PORT)57
 Restart=on-failure
-RestartSec=10
-LimitNOFILE=65535
-Environment="DAEMON_HOME=$HOME/$FOLDER"
-Environment="DAEMON_NAME=$BINARY"
-Environment="UNSAFE_SKIP_BACKUP=true"
+RestartSec=3
+LimitNOFILE=4096
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 # Register And Start Service
-sudo systemctl start $BINARY
 sudo systemctl daemon-reload
 sudo systemctl enable $BINARY
+sudo systemctl start $BINARY
 
 echo -e "\033[0;32m=============================================================\033[0m"
 echo -e "\033[0;32mCONGRATS! SETUP FINISHED\033[0m"
