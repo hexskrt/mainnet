@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="100" height="auto" src="https://github.com/hexskrt/logos/blob/main/ixo.jpg?raw=true">
+  <img height="100" height="auto" src="https://github.com/hexskrt/logos/blob/main/cheqd.png?raw=true">
 </p>
 
 # Cheqd Mainnet | Chain ID : cheqd-mainnet-1
