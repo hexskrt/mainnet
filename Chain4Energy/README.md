@@ -8,7 +8,7 @@
 >- [Chain4Energy](https://docs.c4e.io/validatorsGuide/mainnet/system-preparation.html)
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/CHAIN4ENERGY
+>-  https://explorer.hexnodes.co/chain4energy
 
 ### Public Endpoint
 

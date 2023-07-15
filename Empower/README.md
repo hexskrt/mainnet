@@ -5,7 +5,7 @@
 # Empowerchain Mainnet | Chain ID : empowerchain-1
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/EMPOWER
+>-  https://explorer.hexnodes.co/empower
 
 ### Public Endpoint
 

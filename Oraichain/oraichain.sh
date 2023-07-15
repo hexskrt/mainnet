@@ -25,7 +25,7 @@ DENOM=orai
 REPO=https://github.com/oraichain/orai
 GENESIS=https://snapshot.hexnodes.co/oraid/genesis.json
 ADDRBOOK=https://snapshot.hexnodes.co/oraid/genesis.json
-PORT=107
+PORT=108
 
 # Set Vars
 if [ ! $NODENAME ]; then

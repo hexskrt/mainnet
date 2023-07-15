@@ -26,7 +26,7 @@ COSMOVISOR=cosmovisor
 REPO=https://github.com/Decentr-net/decentr
 GENESIS=https://snapshots.indonode.net/decentr/genesis.json
 ADDRBOOK=https://snapshots.indonode.net/decentr/addrbook.json
-PORT=103
+PORT=104
 
 # Set Vars
 if [ ! $NODENAME ]; then

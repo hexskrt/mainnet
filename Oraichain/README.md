@@ -5,7 +5,7 @@
 # Oraichain Mainnet | Chain ID : Oraichain
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/ORAICHAIN
+>-  https://explorer.hexnodes.co/oraichain
 
 ### Public Endpoint
 

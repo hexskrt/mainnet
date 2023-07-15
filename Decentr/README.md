@@ -5,7 +5,7 @@
 # Decentr Mainnet | Chain ID : mainnet-3
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/DECENTR
+>-  https://explorer.hexnodes.co/decentr
 
 ### Public Endpoint
 

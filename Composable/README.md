@@ -5,7 +5,7 @@
 # Composable Mainnet | Chain ID : centauri-1
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/COMPOSABLE
+>-  https://explorer.hexnodes.co/composable
 
 ### Public Endpoint
 

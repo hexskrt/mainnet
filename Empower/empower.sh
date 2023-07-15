@@ -26,7 +26,7 @@ COSMOVISOR=cosmovisor
 REPO=https://github.com/EmpowerPlastic/empowerchain
 GENESIS=https://ss.empower.nodestake.top/genesis.json
 ADDRBOOK=https://ss.empower.nodestake.top/addrbook.json
-PORT=104
+PORT=105
 
 # Set Vars
 if [ ! $NODENAME ]; then

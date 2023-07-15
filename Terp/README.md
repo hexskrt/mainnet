@@ -5,7 +5,7 @@
 # Terp Mainnet | Chain ID : morocco-1
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/TERP
+>-  https://explorer.hexnodes.co/terp
 
 ### Public Endpoint
 

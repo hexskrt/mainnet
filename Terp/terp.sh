@@ -26,7 +26,7 @@ COSMOVISOR=cosmovisor
 REPO=https://github.com/terpnetwork/terp-core.git
 GENESIS=https://raw.githubusercontent.com/terpnetwork/mainnet/main/morocco-1/genesis.json
 ADDRBOOK=https://snapshots2.nodejumper.io/terpnetwork/addrbook.json
-PORT=109
+PORT=110
 
 # Set Vars
 if [ ! $NODENAME ]; then

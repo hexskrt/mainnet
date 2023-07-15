@@ -5,7 +5,7 @@
 # Gitopia Mainnet | Chain ID : gitopia
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/GITOPIA
+>-  https://explorer.hexnodes.co/gitopia
 
 ### Public Endpoint
 

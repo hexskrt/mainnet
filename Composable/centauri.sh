@@ -26,7 +26,7 @@ COSMOVISOR=cosmovisor
 REPO=https://github.com/notional-labs/composable-centauri.git
 GENESIS=https://snapshots.kjnodes.com/composable/genesis.json
 ADDRBOOK=https://snapshots.kjnodes.com/composable/addrbook.json
-PORT=102
+PORT=103
 
 # Set Vars
 if [ ! $NODENAME ]; then

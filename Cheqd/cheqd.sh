@@ -9,24 +9,24 @@ echo "       ██   ██ ██       ██ ██  ████   ██ �
 echo "      ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
 echo "     ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
 echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
-echo "     Cosmovisor Automatic Installer for Ixo World | Chain ID : ixo-5 ";
+echo "     Cosmovisor Automatic Installer for Cheqd | Chain ID : cheqd-mainnet-1 ";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=ixo-blockchain
+SOURCE=cheqd-node
 WALLET=wallet
-BINARY=ixod
-CHAIN=ixo-5
-FOLDER=.ixod
-VERSION=v0.20.1
-DENOM=uixo
-REPO=https://github.com/ixofoundation/ixo-blockchain.git
+BINARY=cheqd-noded
+CHAIN=cheqd-mainnet-1
+FOLDER=.cheqdnode
+VERSION=v1.4.4
+DENOM=ncheq
+REPO=https://github.com/cheqd/cheqd-node.git
 COSMOVISOR=cosmovisor
-GENESIS=https://anode.team/IXO/main/genesis.json
-ADDRBOOK=https://anode.team/IXO/main/addrbook.json
-PORT=107
+GENESIS=https://ss.hexnodes.co/cheqd/genesis.json
+ADDRBOOK=https://ss.hexnodes.co/cheqd/addrbook.json
+PORT=102
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -108,8 +108,8 @@ sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and
-PEERS="$(curl -sS https://rpc-ixo-ia.cosmosia.notional.ventures/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
-SEEDS="20e1000e88125698264454a884812746c2eb4807@seeds.lavenderfive.com:16656"
+PEERS="$(curl -sS https://rpc.cheqd.hexnodes.co/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS="f3faa1117a1ad191c4ca72184815d4ff810e93c9@128.199.89.53"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -122,7 +122,7 @@ sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.
 sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${PORT}17\"%; s%^address = \":8080\"%address = \":${PORT}80\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${PORT}90\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${PORT}91\"%; s%^address = \"0.0.0.0:8545\"%address = \"0.0.0.0:${PORT}45\"%; s%^ws-address = \"0.0.0.0:8546\"%ws-address = \"0.0.0.0:${PORT}46\"%" $HOME/$FOLDER/config/app.toml
 
 # Set Config Pruning
-pruning="custom"
+pruning="nothing"
 pruning_keep_recent="100"
 pruning_keep_every="0"
 pruning_interval="19"
@@ -137,18 +137,7 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$
 # Enable State Sync
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER
-
-STATE_SYNC_RPC=https://ixo-rpc.ibs.team:443
-LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
-SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
-SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
-
-sed -i \
-  -e "s|^enable *=.*|enable = true|" \
-  -e "s|^rpc_servers *=.*|rpc_servers = \"$STATE_SYNC_RPC,$STATE_SYNC_RPC\"|" \
-  -e "s|^trust_height *=.*|trust_height = $SYNC_BLOCK_HEIGHT|" \
-  -e "s|^trust_hash *=.*|trust_hash = \"$SYNC_BLOCK_HASH\"|" \
-  $HOME/$FOLDER/config/config.toml
+curl -L https://ss.hexnodes.co/cheqd/cheqd.latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
 
 # Create Service
 sudo tee /etc/systemd/system/$BINARY.service > /dev/null << EOF

@@ -5,7 +5,7 @@
 # Ixo Mainnet | Chain ID : ixo-5
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/IXO
+>-  https://explorer.hexnodes.co/ixo
 
 ### Public Endpoint
 

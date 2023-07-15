@@ -5,7 +5,7 @@
 # Planq Mainnet | Chain ID : planq_7070-2
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/PLANQ
+>-  https://explorer.hexnodes.co/planq
 
 ### Public Endpoint
 
