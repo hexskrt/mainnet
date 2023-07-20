@@ -15,7 +15,7 @@ echo -e "\e[0m"
 sleep 1
 
 # Variable
-SOURCE=bcna
+SOURCE=c4e-chain
 WALLET=wallet
 BINARY=c4ed
 CHAIN=perun-1
@@ -106,7 +106,7 @@ sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 
 # Init generation
 $BINARY config keyring-backend file
-$BINARY config chain-d $CHAIN
+$BINARY config chain-id $CHAIN
 $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
