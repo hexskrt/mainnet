@@ -12,9 +12,9 @@
 
 ### Public Endpoint
 
->- API : https://lcd.chain4energy.hexnodes.co
->- RPC : https://rpc.chain4energy.hexnodes.co
->- gRPC : https://grpc.chain4energy.hexnodes.co
+>- API : https://api-m.c4e.hexnodes.co
+>- RPC : https://rpc-m.c4e.hexnodes.co
+>- gRPC : https://grpc-m.c4e.hexnodes.co
 
 ### Auto Installation
 ```
@@ -40,7 +40,7 @@ sudo systemctl stop c4ed
 cp $HOME/.c4e-chain/data/priv_validator_state.json $HOME/.c4e-chain/priv_validator_state.json.backup
 c4ed tendermint unsafe-reset-all --home $HOME/.c4e-chain
 
-STATE_SYNC_RPC=https://rpc.c4e.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc-m.c4e.hexnodes.co:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
