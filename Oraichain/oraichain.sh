@@ -24,7 +24,7 @@ VERSION=v0.41.3
 DENOM=orai
 REPO=https://github.com/oraichain/orai
 GENESIS=https://snapshot.hexnodes.co/oraid/genesis.json
-ADDRBOOK=https://snapshot.hexnodes.co/oraid/genesis.json
+ADDRBOOK=https://snapshot.hexnodes.co/oraid/addrbook.json
 PORT=108
 
 # Set Vars
