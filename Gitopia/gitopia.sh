@@ -26,7 +26,7 @@ COSMOVISOR=cosmovisor
 REPO=https://github.com/gitopia/gitopia.git
 GENESIS=https://snapshots.nodestake.top/gitopia/genesis.json
 ADDRBOOK=https://snapshots.nodestake.top/gitopia/addrbook.json
-PORT=106
+PORT=107
 
 # Set Vars
 if [ ! $NODENAME ]; then

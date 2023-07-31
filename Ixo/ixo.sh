@@ -26,7 +26,7 @@ REPO=https://github.com/ixofoundation/ixo-blockchain.git
 COSMOVISOR=cosmovisor
 GENESIS=https://anode.team/IXO/main/genesis.json
 ADDRBOOK=https://anode.team/IXO/main/addrbook.json
-PORT=107
+PORT=108
 
 # Set Vars
 if [ ! $NODENAME ]; then

@@ -9,23 +9,24 @@ echo "       ██   ██ ██       ██ ██  ████   ██ �
 echo "      ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
 echo "     ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
 echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
-echo "         Automatic Installer for Oraichain | Chain ID : Oraichain ";
+echo "   Cosmovisor Automatic Installer for Composable | Chain ID : centauri-1 ";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=orai
+SOURCE=desmos
 WALLET=wallet
-BINARY=oraid
-CHAIN=Oraichain
-FOLDER=.oraid
-VERSION=v0.41.3
-DENOM=orai
-REPO=https://github.com/oraichain/orai
-GENESIS=https://snapshot.hexnodes.co/oraid/genesis.json
-ADDRBOOK=https://snapshot.hexnodes.co/oraid/addrbook.json
-PORT=112
+BINARY=desmos
+CHAIN=desmos-mainnet
+FOLDER=.desmos
+VERSION=v5.2.0
+DENOM=udsm
+COSMOVISOR=cosmovisor
+REPO=https://github.com/desmos-labs/desmos.git
+GENESIS=http://snapshot.hexnodes.co/desmos/genesis.json
+ADDRBOOK=http://snapshot.hexnodes.co/desmos/addrbook.json
+PORT=105
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -41,6 +42,7 @@ echo -e "CHAIN NAME     : \e[1m\e[35m$CHAIN\e[0m"
 echo -e "NODE VERSION   : \e[1m\e[35m$VERSION\e[0m"
 echo -e "NODE FOLDER    : \e[1m\e[35m$FOLDER\e[0m"
 echo -e "NODE DENOM     : \e[1m\e[35m$DENOM\e[0m"
+echo -e "NODE ENGINE    : \e[1m\e[35m$COSMOVISOR\e[0m"
 echo -e "SOURCE CODE    : \e[1m\e[35m$REPO\e[0m"
 echo -e "NODE PORT      : \e[1m\e[35m$PORT\e[0m"
 echo ""
@@ -55,6 +57,7 @@ echo "export DENOM=${DENOM}" >> $HOME/.bash_profile
 echo "export CHAIN=${CHAIN}" >> $HOME/.bash_profile
 echo "export FOLDER=${FOLDER}" >> $HOME/.bash_profile
 echo "export VERSION=${VERSION}" >> $HOME/.bash_profile
+echo "export COSMOVISOR=${COSMOVISOR}" >> $HOME/.bash_profile
 echo "export REPO=${REPO}" >> $HOME/.bash_profile
 echo "export GENESIS=${GENESIS}" >> $HOME/.bash_profile
 echo "export ADDRBOOK=${ADDRBOOK}" >> $HOME/.bash_profile
@@ -83,21 +86,33 @@ echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile
 source ~/.bash_profile
 go version
 
-# Get mainnet version of Oraichain
+# Get mainnet version of Desmos
 cd $HOME
 rm -rf $SOURCE
 git clone $REPO
 cd $SOURCE
 git checkout $VERSION
-make install
-mv $(which oraid) /usr/local/bin/
+make build
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
+
+# Prepare binaries for Cosmovisor
+mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
+mv build/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
+rm -rf build
+
+# Create application symlinks
+ln -s $HOME/$FOLDER/$COSMOVISOR/genesis $HOME/$FOLDER/$COSMOVISOR/current
+sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 
 # Init generation
+$BINARY config keyring-backend file
+$BINARY config chain-d $CHAIN
+$BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
-# Set peers and
-PEERS="$(curl -sS https://rpc.oraichain.hexnodes.co/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
-SEEDS=""
+# Set peers and seeds
+SEEDS="a1810274de234e85d993f532353f769fabbe6c5d@185.202.239.161:16656"
+PEERS="$(curl -sS https://rpc.desmos.hexnodes.co/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -120,41 +135,45 @@ sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every
 sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/$FOLDER/config/app.toml
 
 # Set minimum gas price
-sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.001$DENOM\"/" $HOME/$FOLDER/config/app.toml
+sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$FOLDER/config/app.toml
 
-# Enable Snapshot
+# Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
-$BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER
-curl -L http://snapshot.hexnodes.co/oraid/oraid.latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+$BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
+curl -L https://valhalla.panthea.eu/snapshots/desmos-snapshot.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+[[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service
-sudo tee /etc/systemd/system/$BINARY.service > /dev/null <<EOF
+sudo tee /etc/systemd/system/$BINARY.service > /dev/null << EOF
 [Unit]
 Description=$BINARY
 After=network-online.target
 
 [Service]
 User=$USER
-ExecStart=$(which oraid) start --home $HOME/.oraid --rpc.laddr tcp://localhost:$(PORT)57
+ExecStart=$(which cosmovisor) run start
 Restart=on-failure
-RestartSec=3
-LimitNOFILE=4096
+RestartSec=10
+LimitNOFILE=65535
+Environment="DAEMON_HOME=$HOME/$FOLDER"
+Environment="DAEMON_NAME=$BINARY"
+Environment="UNSAFE_SKIP_BACKUP=true"
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 # Register And Start Service
+sudo systemctl start $BINARY
 sudo systemctl daemon-reload
 sudo systemctl enable $BINARY
-sudo systemctl start $BINARY
 
 echo -e "\033[0;32m=============================================================\033[0m"
 echo -e "\033[0;32mCONGRATS! SETUP FINISHED\033[0m"
 echo ""
-echo -e "CHECK STATUS BINARY : \033[1m\033[32msystemctl status $BINARY\033[0m"
-echo -e "CHECK RUNNING LOGS : \033[1m\033[32mjournalctl -fu $BINARY -o cat\033[0m"
-echo -e "CHECK LOCAL STATUS : \033[1m\033[32mcurl -s localhost:${PORT}57/status | jq .result.sync_info\033[0m"
+echo -e "CHECK STATUS BINARY : \033[1m\033[35msystemctl status $BINARY\033[0m"
+echo -e "CHECK RUNNING LOGS : \033[1m\033[35mjournalctl -fu $BINARY -o cat\033[0m"
+echo -e "CHECK LOCAL STATUS : \033[1m\033[35mcurl -s localhost:${PORT}57/status | jq .result.sync_info\033[0m"
 echo -e "\033[0;32m=============================================================\033[0m"
 
 # End
