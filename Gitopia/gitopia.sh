@@ -107,6 +107,7 @@ sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 $BINARY config keyring-backend file
 $BINARY config node tcp://localhost:${PORT}57
 $BINARY config chain-id $CHAIN
+$BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
 SEEDS="400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@gitopia.rpc.kjnodes.com:14159"

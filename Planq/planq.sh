@@ -26,7 +26,7 @@ COSMOVISOR=cosmovisor
 REPO=https://github.com/planq-network/planq.git
 GENESIS=https://snapshot.hexnodes.co/planq/genesis.json
 ADDRBOOK=https://snapshot.hexnodes.co/planq/addrbook.json
-PORT=109
+PORT=110
 
 # Set Vars
 if [ ! $NODENAME ]; then
