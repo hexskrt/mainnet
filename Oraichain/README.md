@@ -35,7 +35,7 @@ wget -O https://snapshot.hexnodes.co/oraid/addrbook.json $HOME/.oraid/config/add
 sudo systemctl stop oraid
 cp $HOME/.oraid/data/priv_validator_state.json $HOME/.oraid/priv_validator_state.json.backup
 rm -rf $HOME/.oraid/data
-curl -o - -L http://snapshot.hexnodes.co/oraid/oraid.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.oraid
+curl -o - -L https://snapshot.hexnodes.co/oraid/oraid.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.oraid
 mv $HOME/.oraid/priv_validator_state.json.backup $HOME/.oraid/data/priv_validator_state.json
 sudo systemctl restart oraid && journalctl -u oraid -f -o cat
 ```
@@ -55,8 +55,8 @@ SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq
 
 sed -i.bak -E "s|^(enable[[:space:]]+=[[:space:]]+).*$|\1true| ; \
 s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"$STATE_SYNC_RPC,$STATE_SYNC_RPC\"| ; \
-s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
-s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"|" $HOME/.oraid/config/config.toml
+s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$SYNC_BLOCK_HEIGHT| ; \
+s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$SYNC_BLOCK_HASH\"|" $HOME/.oraid/config/config.toml
 
 mv $HOME/.oraid/priv_validator_state.json.backup $HOME/.oraid/data/priv_validator_state.json
 sudo systemctl restart oraid && sudo journalctl -u oraid -f -o cat
