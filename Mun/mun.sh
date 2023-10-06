@@ -92,7 +92,7 @@ git clone $REPO
 cd $SOURCE
 #git checkout $VERSION
 make build
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.5.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin

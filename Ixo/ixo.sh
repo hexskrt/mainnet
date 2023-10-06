@@ -20,7 +20,7 @@ WALLET=wallet
 BINARY=ixod
 CHAIN=ixo-5
 FOLDER=.ixod
-VERSION=v0.20.1
+VERSION=v2.0.0
 DENOM=uixo
 REPO=https://github.com/ixofoundation/ixo-blockchain.git
 COSMOVISOR=cosmovisor
@@ -93,7 +93,7 @@ git clone $REPO
 cd $SOURCE
 git checkout $VERSION
 make build
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.5.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin

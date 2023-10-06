@@ -20,7 +20,7 @@ WALLET=wallet
 BINARY=bcnad
 CHAIN=bitcanna-1
 FOLDER=.bcna
-VERSION=v2.0.2
+VERSION=v2.0.3
 DENOM=ubcna
 COSMOVISOR=cosmovisor
 REPO=https://github.com/BitCannaGlobal/bcna.git
@@ -76,7 +76,7 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install make build-essential gcc git jq chrony lz4 -y
 
 # Install GO
-ver="1.19.10"
+ver="1.20.5"
 cd $HOME
 wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz"
 sudo rm -rf /usr/local/go
@@ -93,7 +93,7 @@ git clone $REPO
 cd $SOURCE
 git checkout $VERSION
 make build
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.5.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin

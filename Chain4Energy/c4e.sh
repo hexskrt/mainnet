@@ -20,7 +20,7 @@ WALLET=wallet
 BINARY=c4ed
 CHAIN=perun-1
 FOLDER=.c4e-chain
-VERSION=v1.2.0
+VERSION=v1.2.1
 DENOM=uc4ed
 COSMOVISOR=cosmovisor
 REPO=https://github.com/chain4energy/c4e-chain.git
@@ -93,7 +93,7 @@ git clone $REPO
 cd $SOURCE
 git checkout $VERSION
 make build
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.5.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin

@@ -20,7 +20,7 @@ WALLET=wallet
 BINARY=planqd
 CHAIN=planq_7070-2
 FOLDER=.planqd
-VERSION=v1.0.6
+VERSION=v1.0.7
 DENOM=aplanq
 COSMOVISOR=cosmovisor
 REPO=https://github.com/planq-network/planq.git
@@ -93,7 +93,7 @@ git clone $REPO
 cd $SOURCE
 git checkout $VERSION
 make build
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.5.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin

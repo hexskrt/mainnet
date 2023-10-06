@@ -8,7 +8,7 @@
 >- [Bitcanna](https://docs.bitcanna.io/guides/validator-setup-guide)
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/BITCANNA
+>-  https://explorer.hexnodes.co/bitcanna
 
 ### Public Endpoint
 
