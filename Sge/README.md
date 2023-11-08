@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="100" height="auto" src="https://github.com/hexskrt/logos/blob/main/sge.jpeg?raw=true">
+  <img height="100" height="auto" src="https://github.com/hexskrt/logos/blob/main/sge.jpg?raw=true">
 </p>
 
 # Sge Mainnet | Chain ID : sgenet-1
