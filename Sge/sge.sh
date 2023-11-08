@@ -15,18 +15,18 @@ echo -e "\e[0m"
 sleep 1
 
 # Variable
-SOURCE=terp-core
+SOURCE=sge
 WALLET=wallet
-BINARY=terpd
-CHAIN=morocco-1
-FOLDER=.terp
-VERSION=v3.1.0
-DENOM=uterp
+BINARY=sged
+CHAIN=sgenet-1
+FOLDER=.sge
+VERSION=v1.1.0
+DENOM=usge
 COSMOVISOR=cosmovisor
 REPO=https://github.com/terpnetwork/terp-core.git
-GENESIS=https://raw.githubusercontent.com/terpnetwork/mainnet/main/morocco-1/genesis.json
-ADDRBOOK=https://snapshots2.nodejumper.io/terpnetwork/addrbook.json
-PORT=115
+GENESIS=https://raw.githubusercontent.com/sge-network/networks/master/mainnet/sgenet-1/genesis.json
+ADDRBOOK=https://ss.sge.nodestake.top/addrbook.json
+PORT=114
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -76,7 +76,7 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install make build-essential gcc git jq chrony lz4 -y
 
 # Install GO
-ver="1.20.5"
+ver="1.19.9"
 cd $HOME
 wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz"
 sudo rm -rf /usr/local/go
@@ -93,7 +93,7 @@ git clone $REPO
 cd $SOURCE
 git checkout $VERSION
 make build
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.5.0
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
@@ -111,8 +111,8 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
-SEEDS=""
-PEERS="$(curl -sS https://rpc.terp.nodestake.top/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS="436a39f11ff789188347e78afdbe694cf90e8ce1@rpc.sge.hexnodes.co:19656"
+PEERS="$(curl -sS https://rpc.sge.hexnodes.co/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -135,13 +135,13 @@ sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every
 sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/$FOLDER/config/app.toml
 
 # Set minimum gas price
-sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$FOLDER/config/app.toml
+sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.001$DENOM\"/" $HOME/$FOLDER/config/app.toml
 
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-SNAP_NAME=$(curl -s https://snapshots.nodestake.top/terp/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
-curl -o - -L https://snapshots.nodestake.top/terp/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/$FOLDER
+SNAP_NAME=$(curl -s https://ss.sge.nodestake.top/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
+curl -o - -L https://ss.sge.nodestake.top/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/.sge
 [[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service
