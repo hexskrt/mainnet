@@ -5,13 +5,13 @@
 # Gitopia Mainnet | Chain ID : gitopia
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/gitopia
+>-  https://explorer.hexnodes.one/GITOPIA
 
 ### Public Endpoint
 
->- API : https://lcd.gitopia.hexnodes.co
->- RPC : https://rpc.gitopia.hexnodes.co
->- gRPC : https://grpc.gitopia.hexnodes.co
+>- API : https://lcd.gitopia.hexnodes.one
+>- RPC : https://rpc.gitopia.hexnodes.one
+>- gRPC : https://grpc.gitopia.hexnodes.one
 
 ### Auto Installation
 
@@ -25,7 +25,7 @@ wget -O gitopia.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Gitopi
 sudo systemctl stop gitopiad
 cp $HOME/.gitopia/data/priv_validator_state.json $HOME/.gitopia/priv_validator_state.json.backup
 rm -rf $HOME/.gitopia/data
-curl -o - -L http://snap.hexnodes.co/gitopia/gitopia.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.gitopia
+curl -o - -L http://snap.hexnodes.one/gitopia/gitopia.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.gitopia
 mv $HOME/.gitopia/priv_validator_state.json.backup $HOME/.gitopia/data/priv_validator_state.json
 sudo systemctl restart gitopiad && journalctl -u gitopiad -f -o cat
 ```
@@ -38,7 +38,7 @@ sudo systemctl stop gitopiad
 cp $HOME/.gitopia/data/priv_validator_state.json $HOME/.gitopia/priv_validator_state.json.backup
 gitopiad tendermint unsafe-reset-all --home $HOME/.gitopia
 
-STATE_SYNC_RPC=https://rpc.gitopia.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.gitopia.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

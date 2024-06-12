@@ -5,13 +5,13 @@
 # Decentr Mainnet | Chain ID : mainnet-3
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/decentr
+>-  https://explorer.hexnodes.one/DECENTR
 
 ### Public Endpoint
 
->- API : https://lcd.decentr.hexnodes.co
->- RPC : https://rpc.decentr.hexnodes.co
->- gRPC : https://grpc.decentr.hexnodes.co
+>- API : https://lcd.decentr.hexnodes.one
+>- RPC : https://rpc.decentr.hexnodes.one
+>- gRPC : https://grpc.decentr.hexnodes.one
 
 ### Auto Installation
 ```
@@ -23,7 +23,7 @@ wget -O decentr.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Decent
 sudo systemctl stop decentrd
 cp $HOME/.decentr/data/priv_validator_state.json $HOME/.decentr/priv_validator_state.json.backup
 rm -rf $HOME/.decentr/data
-curl -o - -L http://snap.hexnodes.co/decemtr/decentr.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.decentr
+curl -o - -L http://snap.hexnodes.one/decemtr/decentr.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.decentr
 mv $HOME/.decentr/priv_validator_state.json.backup $HOME/.decentr/data/priv_validator_state.json
 sudo systemctl restart decentrd && journalctl -u decentrd -f -o cat
 ```
@@ -35,7 +35,7 @@ sudo systemctl stop decentrd
 cp $HOME/.decentr/data/priv_validator_state.json $HOME/.decentr/priv_validator_state.json.backup
 decentrd tendermint unsafe-reset-all --home $HOME/.decentr
 
-STATE_SYNC_RPC=https://rpc.decentr.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.decentr.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

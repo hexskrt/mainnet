@@ -5,13 +5,13 @@
 # Planq Mainnet | Chain ID : planq_7070-2
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/planq
+>-  https://explorer.hexnodes.one/PLANQ
 
 ### Public Endpoint
 
->- API : https://lcd.planq.hexnodes.co
->- RPC : https://rpc.planq.hexnodes.co
->- gRPC : https://grpc.planq.hexnodes.co
+>- API : https://lcd.planq.hexnodes.one
+>- RPC : https://rpc.planq.hexnodes.one
+>- gRPC : https://grpc.planq.hexnodes.one
 
 ### Auto Installation
 
@@ -25,7 +25,7 @@ wget -O planq.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Planq/pl
 sudo systemctl stop planqd
 cp $HOME/.planqd/data/priv_validator_state.json $HOME/.planqd/priv_validator_state.json.backup
 rm -rf $HOME/.planqd/data
-curl -o - -L http://snapshot.hexnodes.co/planq/planq.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.planqd
+curl -o - -L http://snapshot.hexnodes.one/planq/planq.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.planqd
 mv $HOME/.planqd/priv_validator_state.json.backup $HOME/.planqd/data/priv_validator_state.json
 sudo systemctl restart planqd && journalctl -u planqd -f -o cat
 ```
@@ -38,7 +38,7 @@ sudo systemctl stop planqd
 cp $HOME/.planqd/data/priv_validator_state.json $HOME/.planqd/priv_validator_state.json.backup
 planqd tendermint unsafe-reset-all --home $HOME/.planqd
 
-STATE_SYNC_RPC=https://rpc.planq.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.planq.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

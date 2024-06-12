@@ -8,13 +8,13 @@
 >- [Bitcanna](https://docs.bitcanna.io/guides/validator-setup-guide)
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/bitcanna
+>-  https://explorer.hexnodes.one/BITCANNA
 
 ### Public Endpoint
 
->- API : https://lcd.bitcanna.hexnodes.co
->- RPC : https://rpc.bitcanna.hexnodes.co
->- gRPC : https://grpc.bitcanna.hexnodes.co
+>- API : https://lcd.bitcanna.hexnodes.one
+>- RPC : https://rpc.bitcanna.hexnodes.one
+>- gRPC : https://grpc.bitcanna.hexnodes.one
 
 ### Auto Installation
 ```
@@ -27,7 +27,7 @@ sudo systemctl stop bcnad
 cp $HOME/.bcna/data/priv_validator_state.json $HOME/.bcna/priv_validator_state.json.backup
 rm -rf $HOME/.bcna/data
 
-curl -L https://snap.hexnodes.co/bitcanna/bitcanna.latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/.bcna/
+curl -L https://snap.hexnodes.one/bitcanna/bitcanna.latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/.bcna/
 mv $HOME/.bcna/priv_validator_state.json.backup $HOME/.bcna/data/priv_validator_state.json
 
 sudo systemctl start bcnad && sudo journalctl -fu bcnad -o cat
@@ -39,7 +39,7 @@ sudo systemctl stop bcnad
 cp $HOME/.bcna/data/priv_validator_state.json $HOME/.bcna/priv_validator_state.json.backup
 bcnad tendermint unsafe-reset-all --home $HOME/.bcna
 
-STATE_SYNC_RPC=https://rpc.bitcanna.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.bitcanna.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
@@ -58,16 +58,16 @@ sudo systemctl start bcnad && sudo journalctl -u bcnad -f --no-hostname -o cat
 
 ### Live Peers
 ```
-PEERS="$(curl -sS https://rpc.bitcanna.hexnodes.co/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+PEERS="$(curl -sS https://rpc.bitcanna.hexnodes.one/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/.bcna/config/config.toml
 ```
 ### Addrbook
 ```
-curl -Ls https://snap.hexnodes.co/bitcanna/addrbook.json > $HOME/.bcna/config/addrbook.json
+curl -Ls https://snap.hexnodes.one/bitcanna/addrbook.json > $HOME/.bcna/config/addrbook.json
 ```
 ### Genesis
 ```
-curl -Ls https://snap.hexnodes.co/bitcanna/genesis.json > $HOME/.bcna/config/genesis.json
+curl -Ls https://snap.hexnodes.one/bitcanna/genesis.json > $HOME/.bcna/config/genesis.json
 ```
 
 ### Bitcanna CLI Cheatsheet

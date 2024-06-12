@@ -5,13 +5,13 @@
 # Desmos Network Mainnet | Chain ID : desmos-mainnet
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/desmos
+>-  https://explorer.hexnodes.one/DESMOS
 
 ### Public Endpoint
 
->- API : https://lcd.desmos.hexnodes.co
->- RPC : https://rpc.desmos.hexnodes.co
->- gRPC : https://grpc.desmos.hexnodes.co
+>- API : https://lcd.desmos.hexnodes.one
+>- RPC : https://rpc.desmos.hexnodes.one
+>- gRPC : https://grpc.desmos.hexnodes.one
 
 ### Auto Installation
 
@@ -25,7 +25,7 @@ wget -O desmos.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Desmos/
 sudo systemctl stop desmos
 cp $HOME/.desmos/data/priv_validator_state.json $HOME/.desmos/priv_validator_state.json.backup
 rm -rf $HOME/.desmos/data
-curl -o - -L http://snapshot.hexnodes.co/desmos/desmos.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.desmos
+curl -o - -L http://snapshot.hexnodes.one/desmos/desmos.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.desmos
 mv $HOME/.desmos/priv_validator_state.json.backup $HOME/.desmos/data/priv_validator_state.json
 sudo systemctl restart desmos && journalctl -u desmos -f -o cat
 ```
@@ -38,7 +38,7 @@ sudo systemctl stop desmos
 cp $HOME/.desmos/data/priv_validator_state.json $HOME/.desmos/priv_validator_state.json.backup
 desmos tendermint unsafe-reset-all --home $HOME/.desmos
 
-STATE_SYNC_RPC=https://rpc.desmos.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.desmos.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

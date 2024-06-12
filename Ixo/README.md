@@ -5,13 +5,13 @@
 # Ixo Mainnet | Chain ID : ixo-5
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/ixo
+>-  https://explorer.hexnodes.one/IXO
 
 ### Public Endpoint
 
->- API : https://lcd.ixo.hexnodes.co
->- RPC : https://rpc.ixo.hexnodes.co
->- gRPC : https://grpc.ixo.hexnodes.co
+>- API : https://lcd.ixo.hexnodes.one
+>- RPC : https://rpc.ixo.hexnodes.one
+>- gRPC : https://grpc.ixo.hexnodes.one
 
 ### Auto Installation
 ```
@@ -24,7 +24,7 @@ sudo systemctl stop ixod
 cp $HOME/.ixod/data/priv_validator_state.json $HOME/.ixod/priv_validator_state.json.backup
 rm -rf $HOME/.ixod/data
 
-curl -L https://snap.hexnodes.co/ixo/ixo.latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/.ixod/
+curl -L https://snap.hexnodes.one/ixo/ixo.latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/.ixod/
 mv $HOME/.ixod/priv_validator_state.json.backup $HOME/.ixod/data/priv_validator_state.json
 
 sudo systemctl start ixod && sudo journalctl -fu ixod -o cat
@@ -36,7 +36,7 @@ sudo systemctl stop ixod
 cp $HOME/.ixod/data/priv_validator_state.json $HOME/.ixod/priv_validator_state.json.backup
 ixod tendermint unsafe-reset-all --home $HOME/.ixod
 
-STATE_SYNC_RPC=https://rpc.ixo.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.ixo.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
@@ -60,11 +60,11 @@ sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/.ixod/
 ```
 ### Addrbook
 ```
-curl -Ls https://snap.hexnodes.co/ixo/addrbook.json > $HOME/.ixod/config/addrbook.json
+curl -Ls https://snap.hexnodes.one/ixo/addrbook.json > $HOME/.ixod/config/addrbook.json
 ```
 ### Genesis
 ```
-curl -Ls https://snap.hexnodes.co/ixo/genesis.json > $HOME/.ixod/config/genesis.json
+curl -Ls https://snap.hexnodes.one/ixo/genesis.json > $HOME/.ixod/config/genesis.json
 ```
 
 ### Ixo CLI Cheatsheet

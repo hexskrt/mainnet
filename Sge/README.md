@@ -5,13 +5,13 @@
 # Sge Mainnet | Chain ID : sgenet-1
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/sge
+>-  https://explorer.hexnodes.one/SGE
 
 ### Public Endpoint
 
->- API : https://lcd.sge.hexnodes.co
->- RPC : https://rpc.sge.hexnodes.co
->- gRPC : https://grpc.sge.hexnodes.co
+>- API : https://lcd.sge.hexnodes.one
+>- RPC : https://rpc.sge.hexnodes.one
+>- gRPC : https://grpc.sge.hexnodes.one
 
 ### Auto Installation
 
@@ -25,7 +25,7 @@ wget -O sge.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Sge/sge.sh
 sudo systemctl stop sged
 cp $HOME/.sge/data/priv_validator_state.json $HOME/.sge/priv_validator_state.json.backup
 rm -rf $HOME/.sge/data
-curl -o - -L http://snapshot.hexnodes.co/sge/sge.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.sge
+curl -o - -L http://snapshot.hexnodes.one/sge/sge.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.sge
 mv $HOME/.sge/priv_validator_state.json.backup $HOME/.sge/data/priv_validator_state.json
 sudo systemctl restart sged && journalctl -u sged -f -o cat
 ```
@@ -38,7 +38,7 @@ sudo systemctl stop sged
 cp $HOME/.sge/data/priv_validator_state.json $HOME/.sge/priv_validator_state.json.backup
 sged tendermint unsafe-reset-all --home $HOME/.sge
 
-STATE_SYNC_RPC=https://rpc.sge.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.sge.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

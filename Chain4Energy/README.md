@@ -8,13 +8,13 @@
 >- [Chain4Energy](https://docs.c4e.io/validatorsGuide/mainnet/system-preparation.html)
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/chain4energy
+>-  https://explorer.hexnodes.one/C4E
 
 ### Public Endpoint
 
->- API : https://api-m.c4e.hexnodes.co
->- RPC : https://rpc-m.c4e.hexnodes.co
->- gRPC : https://grpc-m.c4e.hexnodes.co
+>- API : https://api-m.c4e.hexnodes.one
+>- RPC : https://rpc-m.c4e.hexnodes.one
+>- gRPC : https://grpc-m.c4e.hexnodes.one
 
 ### Auto Installation
 ```
@@ -27,7 +27,7 @@ wget -O c4e.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Chain4Ener
 sudo systemctl stop c4ed
 cp $HOME/.c4e-chain/data/priv_validator_state.json $HOME/.c4e-chain/priv_validator_state.json.backup
 rm -rf $HOME/.c4e-chain/data
-curl -o - -L http://snap.hexnodes.co/c4e/c4e.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.c4e-chain
+curl -o - -L http://snap.hexnodes.one/c4e/c4e.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.c4e-chain
 mv $HOME/.c4e-chain/priv_validator_state.json.backup $HOME/.c4e-chain/data/priv_validator_state.json
 sudo systemctl restart c4ed && journalctl -u c4ed -f -o cat
 ```
@@ -40,7 +40,7 @@ sudo systemctl stop c4ed
 cp $HOME/.c4e-chain/data/priv_validator_state.json $HOME/.c4e-chain/priv_validator_state.json.backup
 c4ed tendermint unsafe-reset-all --home $HOME/.c4e-chain
 
-STATE_SYNC_RPC=https://rpc-m.c4e.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc-m.c4e.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

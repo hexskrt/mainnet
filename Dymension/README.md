@@ -5,13 +5,13 @@
 # Dymension Mainnet | Chain ID : dymension_1100-1
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/DYMENSION
+>-  https://explorer.hexnodes.one/DYMENSION
 
 ### Public Endpoint
 
->- API : https://lcd.dymension.hexnodes.co
->- RPC : https://rpc.dymension.hexnodes.co
->- gRPC : https://grpc.dymension.hexnodes.co
+>- API : https://lcd.dymension.hexnodes.one
+>- RPC : https://rpc.dymension.hexnodes.one
+>- gRPC : https://grpc.dymension.hexnodes.one
 
 ### Auto Installation
 ```
@@ -35,7 +35,7 @@ sudo systemctl stop dymd
 cp $HOME/.dymension/data/priv_validator_state.json $HOME/.dymension/priv_validator_state.json.backup
 dymd tendermint unsafe-reset-all --home $HOME/.dymension
 
-STATE_SYNC_RPC=https://rpc.dymension.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.dymension.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

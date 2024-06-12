@@ -5,13 +5,13 @@
 # Terp Mainnet | Chain ID : morocco-1
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/terp
+>-  https://explorer.hexnodes.one/TERP
 
 ### Public Endpoint
 
->- API : https://lcd.terp.hexnodes.co
->- RPC : https://rpc.terp.hexnodes.co
->- gRPC : https://grpc.terp.hexnodes.co
+>- API : https://lcd.terp.hexnodes.one
+>- RPC : https://rpc.terp.hexnodes.one
+>- gRPC : https://grpc.terp.hexnodes.one
 
 ### Auto Installation
 
@@ -25,7 +25,7 @@ wget -O terp.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/Terp/terp
 sudo systemctl stop terpd
 cp $HOME/.terp/data/priv_validator_state.json $HOME/.terp/priv_validator_state.json.backup
 rm -rf $HOME/.terp/data
-curl -o - -L http://snapshot.hexnodes.co/terp/terp.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.terp
+curl -o - -L http://snapshot.hexnodes.one/terp/terp.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.terp
 mv $HOME/.terp/priv_validator_state.json.backup $HOME/.terp/data/priv_validator_state.json
 sudo systemctl restart terpd && journalctl -u terpd -f -o cat
 ```
@@ -38,7 +38,7 @@ sudo systemctl stop terpd
 cp $HOME/.terp/data/priv_validator_state.json $HOME/.terp/priv_validator_state.json.backup
 terpd tendermint unsafe-reset-all --home $HOME/.terp
 
-STATE_SYNC_RPC=https://rpc.terp.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.terp.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

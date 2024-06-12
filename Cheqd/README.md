@@ -5,7 +5,7 @@
 # Cheqd Mainnet | Chain ID : cheqd-mainnet-1
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/cheqd
+>-  https://explorer.hexnodes.co/CHEQD
 
 ### Public Endpoint
 

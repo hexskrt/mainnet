@@ -20,7 +20,7 @@ WALLET=wallet
 BINARY=bcnad
 CHAIN=bitcanna-1
 FOLDER=.bcna
-VERSION=v2.0.3
+VERSION=v3.1.0
 DENOM=ubcna
 COSMOVISOR=cosmovisor
 REPO=https://github.com/BitCannaGlobal/bcna.git
@@ -76,7 +76,7 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install make build-essential gcc git jq chrony lz4 -y
 
 # Install GO
-ver="1.20.5"
+ver="1.22.3"
 cd $HOME
 wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz"
 sudo rm -rf /usr/local/go

@@ -5,13 +5,13 @@
 # Oraichain Mainnet | Chain ID : Oraichain
 
 ### Custom Explorer:
->-  https://explorer.hexnodes.co/oraichain
+>-  https://explorer.hexnodes.one/ORAICHAIN
 
 ### Public Endpoint
 
->- API : https://lcd.oraichain.hexnodes.co
->- RPC : https://rpc.oraichain.hexnodes.co
->- gRPC : https://grpc.oraichain.hexnodes.co
+>- API : https://lcd.oraichain.hexnodes.one
+>- RPC : https://rpc.oraichain.hexnodes.one
+>- gRPC : https://grpc.oraichain.hexnodes.one
 
 ### Auto Installation
 
@@ -21,12 +21,12 @@ wget -O oraichain.sh https://raw.githubusercontent.com/hexskrt/mainnet/main/orai
 
 ### Genesis
 ```
-wget -O https://snapshot.hexnodes.co/oraid/genesis.json $HOME/.oraid/config/genesis.json
+wget -O https://snapshot.hexnodes.one/oraid/genesis.json $HOME/.oraid/config/genesis.json
 ```
 
 ### Addrbook
 ```
-wget -O https://snapshot.hexnodes.co/oraid/addrbook.json $HOME/.oraid/config/addrbook.json
+wget -O https://snapshot.hexnodes.one/oraid/addrbook.json $HOME/.oraid/config/addrbook.json
 ```
 
 ### Snapshot
@@ -35,7 +35,7 @@ wget -O https://snapshot.hexnodes.co/oraid/addrbook.json $HOME/.oraid/config/add
 sudo systemctl stop oraid
 cp $HOME/.oraid/data/priv_validator_state.json $HOME/.oraid/priv_validator_state.json.backup
 rm -rf $HOME/.oraid/data
-curl -o - -L https://snapshot.hexnodes.co/oraid/oraid.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.oraid
+curl -o - -L https://snapshot.hexnodes.one/oraid/oraid.latest.tar.lz4 | lz4 -c -d - | tar -x -C $HOME/.oraid
 mv $HOME/.oraid/priv_validator_state.json.backup $HOME/.oraid/data/priv_validator_state.json
 sudo systemctl restart oraid && journalctl -u oraid -f -o cat
 ```
@@ -48,7 +48,7 @@ sudo systemctl stop oraid
 cp $HOME/.oraid/data/priv_validator_state.json $HOME/.oraid/priv_validator_state.json.backup
 oraid tendermint unsafe-reset-all --home $HOME/.oraid
 
-STATE_SYNC_RPC=https://rpc.oraichain.hexnodes.co:443
+STATE_SYNC_RPC=https://rpc.oraichain.hexnodes.one:443
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)

@@ -20,12 +20,12 @@ WALLET=wallet
 BINARY=dymd
 CHAIN=dymension_1100-1
 FOLDER=.dymension
-VERSION=v3.0.0
+VERSION=v3.1.0
 DENOM=adym
 COSMOVISOR=cosmovisor
 REPO=https://github.com/dymensionxyz/dymension.git
-GENESIS=https://snap.nodex.one/dymension/genesis.json
-ADDRBOOK=https://snap.nodex.one/dymension/addrbook.json
+GENESIS=https://snapshots.kjnodes.com/dymension/genesis.json
+ADDRBOOK=https://snapshots.kjnodes.com/dymension/addrbook.json
 PORT=106
 
 # Set Vars
@@ -76,7 +76,7 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install make build-essential gcc git jq chrony lz4 -y
 
 # Install GO
-ver="1.21.6"
+ver="1.22.3"
 cd $HOME
 wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz"
 sudo rm -rf /usr/local/go
@@ -111,8 +111,8 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
-SEEDS="f8044a0a4c58ada5ee66cc5625d87ac41b298c7c@rpc.dymension.hexnodes.co:12557"
-PEERS="$(curl -sS https://rpc.dymension.hexnodes.co/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS="400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@dymension.rpc.kjnodes.com:14659"
+PEERS="$(curl -sS https://dymension.rpc.kjnodes.com/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -140,7 +140,7 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"20000000000$DENOM\"
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-curl -L https://snap.nodex.one/dymension/dymension-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+curl -L https://snapshots.kjnodes.com/dymension/snapshot_latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
 [[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service
